@@ -1,0 +1,16 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:ModularAutomatedStockTrading/backend.git",
+  "author": "williamBMDK <williambillemeyling@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.4"
+  },
+  "scripts": {
+    "start": "NODE_PATH=src/server node src/server/app"
+  }
+}
