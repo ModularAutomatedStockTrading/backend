@@ -13,7 +13,8 @@ const port = 4000;
 
 app.use("/models", models);
 
-mongoose.connect('mongodb://localhost:27017/modular_trading_database', {useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/mtd', {useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.set('useFindAndModify', false);
 
 app.listen(port, () => {
     console.log(`server running at port ${port}...`)

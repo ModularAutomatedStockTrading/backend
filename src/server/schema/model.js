@@ -4,12 +4,14 @@ const Schema = require('mongoose').Schema;
 
 const input = new Schema({
     value : String,
-    type : String
+    type : String,
+    label : String
 });
 
 const output = new Schema({
     value : String,
-    type : String
+    type : String,
+    label : String
 });
 
 const schema = new Schema({
@@ -18,6 +20,7 @@ const schema = new Schema({
     amountOfHiddenLayers : Number,
     amountOfInputNodes : Number,
     amountOfOutputNodes : Number,
+    amountOfHiddenLayerNodes : [Number],
     inputs : [input],
     outputs : [output]
 });

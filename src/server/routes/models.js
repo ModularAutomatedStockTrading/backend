@@ -13,8 +13,9 @@ router.get("/", async (req, res) => {
     res.send({models});
 });
 
-router.patch("/:id", (req, res) => {
-    res.send("hello patch");
+router.patch("/:id", async (req, res) => {
+    const model = await Model.findByIdAndUpdate(req.params.id, req.body.data, {new : true});
+    res.send({model});
 });
 
 module.exports = router;
