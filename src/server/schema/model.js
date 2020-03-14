@@ -14,7 +14,7 @@ const output = new Schema({
     label : String
 });
 
-const schema = new Schema({
+const struct = {
     name : String,
     description : String,
     amountOfHiddenLayers : Number,
@@ -23,6 +23,8 @@ const schema = new Schema({
     amountOfHiddenLayerNodes : [Number],
     inputs : [input],
     outputs : [output]
-});
+};
 
-module.exports = mongoose.model('Model', schema);
+module.exports.struct = struct;
+
+module.exports.model = mongoose.model('Model', new Schema(struct));
