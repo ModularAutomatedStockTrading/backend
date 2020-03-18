@@ -1,6 +1,6 @@
 const express = require("express");
-const Instance = require("schema/instance").model;
-const Model = require("schema/model").model;
+const Instance = require("server/schema/instance").model;
+const Model = require("server/schema/model").model;
 const router = express.Router();
 
 router.post("/", async (req, res) => {

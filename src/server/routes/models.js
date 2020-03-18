@@ -1,5 +1,5 @@
 const express = require("express");
-const Model = require("schema/model").model;
+const Model = require("server/schema/model").model;
 const router = express.Router();
 
 router.post("/", (req, res) => {

@@ -1,9 +1,13 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const express = require("express");
 const bodyParser = require('body-parser');
-const models = require("routes/models");
-const instances = require("routes/instances");
+const models = require("./routes/models");
+const instances = require("./routes/instances");
 const mongoose = require("mongoose");
-var cors = require('cors')
+const cors = require('cors')
+const trading = require("./routes/trading");
 
 const app = express();
 
@@ -14,6 +18,7 @@ const port = 4000;
 
 app.use("/models", models);
 app.use("/instances", instances);
+app.use("/api", trading);
 
 mongoose.connect('mongodb://localhost:27017/mtd', {useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.set('useFindAndModify', false);
