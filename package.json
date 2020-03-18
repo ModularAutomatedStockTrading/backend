@@ -14,6 +14,6 @@
   },
   "scripts": {
     "start-linux": "NODE_PATH=src node src/server/app",
-    "start-windows" : "cmd.exe /C \"set NODE_PATH=.&& node src/server/app\""
+    "start-windows" : "cmd.exe /C \"set NODE_PATH=src/server && node src/server/app\""
   }
 }
