@@ -13,6 +13,7 @@
     "node-fetch": "^2.6.0"
   },
   "scripts": {
-    "start": "NODE_PATH=src node src/server/app"
+    "start-linux": "NODE_PATH=src node src/server/app",
+    "start-windows" : "cmd.exe /C \"set NODE_PATH=.&& node src/server/app\""
   }
 }
