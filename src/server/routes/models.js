@@ -2,6 +2,7 @@ const express = require("express");
 const Model = require("server/schema/model").model;
 const ModelTemplate = require("server/schema/modelTemplate").model;
 const router = express.Router();
+const ModelService = require("server/services/model")
 
 router.post("/", async (req, res) => {
     const modelTemplateID = req.body.data.modelTemplateID;
@@ -32,7 +33,20 @@ router.delete("/:id", async (req, res) => {
 });
 
 router.post("/:id/train", async (req, res) => {
-    //await 
+    const model = await Model.findById(req.params.id);
+    
+    model.isTraining = true;
+    model.save();
+
+    res.sendStatus({model});
+    
+    const modelService = new ModelService(model);
+    //modelService.train();
+    //const res = modelService.getResult();
+    
+    model.hasTrained = true;
+    model.isTraining = false;
+    model.save();
 })
 
 module.exports = router;
