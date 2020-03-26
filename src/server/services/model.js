@@ -1,5 +1,5 @@
 module.exports = class Model{
-    constructor(data){
-        
+    constructor(model){
+        console.log(model)
     }
 }

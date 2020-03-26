@@ -27,4 +27,4 @@ const struct = {
 
 module.exports.struct = struct;
 
-module.exports.model = mongoose.model('Model', new Schema(struct));
+module.exports.model = mongoose.model('ModelTemplate', new Schema(struct));

@@ -3,11 +3,12 @@ dotenv.config();
 
 const express = require("express");
 const bodyParser = require('body-parser');
-const models = require("./routes/models");
-const instances = require("./routes/instances");
 const mongoose = require("mongoose");
 const cors = require('cors')
-const trading = require("./routes/trading");
+
+const modelRoutes = require("./routes/models");
+const modelTemplateRoutes = require("./routes/modelTemplates");
+const tradingRoutes = require("./routes/trading");
 
 const app = express();
 
@@ -16,9 +17,9 @@ app.use(express.json());
 
 const port = 4000;
 
-app.use("/models", models);
-app.use("/instances", instances);
-app.use("/api", trading);
+app.use("/models", modelRoutes);
+app.use("/modelTemplates", modelTemplateRoutes);
+app.use("/api", tradingRoutes);
 
 mongoose.connect('mongodb://localhost:27017/mtd', {useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.set('useFindAndModify', false);
