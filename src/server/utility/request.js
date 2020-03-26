@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 
-module.exports.buildQueryString = obj => {
+const buildQueryString = obj => {
     const res = [];
     let cnt = Object.keys(obj).length;
     for(const key in obj){
@@ -12,6 +12,6 @@ module.exports.buildQueryString = obj => {
     return res.join("");
 }
 
-module.exports.fetchJSON = async (url) => {
+const fetchJSON = async (url) => {
     return await(await fetch(url)).json();
 }

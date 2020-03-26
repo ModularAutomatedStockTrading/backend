@@ -1,4 +1,4 @@
-module.exports = class Instance{
+module.exports = class Model{
     constructor(data){
         
     }
