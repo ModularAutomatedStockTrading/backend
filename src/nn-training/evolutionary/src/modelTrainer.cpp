@@ -5,6 +5,6 @@ ModelTrainer::ModelTrainer(int layer_cnt, int* model, std::vector<std::vector<in
     ModelTrainer::training_data_output = output;
 }
 
-ModelTrainer::getInputSize() {
+int ModelTrainer::getInputSize() {
     return ModelTrainer::training_data_input.size();
 }

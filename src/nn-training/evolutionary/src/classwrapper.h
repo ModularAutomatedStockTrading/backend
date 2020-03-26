@@ -1,7 +1,7 @@
 #ifndef CLASSWRAPPER_H_INCLUDED
 #define CLASSWRAPPER_H_INCLUDED
 
-#include "napi.h"
+#include <napi.h>
 #include "modelTrainer.h"
 
 class ClassWrapper : public Napi::ObjectWrap<ClassWrapper> {
