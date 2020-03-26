@@ -10,10 +10,11 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongoose": "^5.9.4",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "nodemon": "^2.0.2"
   },
   "scripts": {
-    "start-linux": "NODE_PATH=src node src/server/app",
-    "start-windows" : "cmd.exe /C \"set NODE_PATH=./src&& node src/server/app\""
+    "start-linux": "NODE_PATH=src nodemon src/server/app",
+    "start-windows": "cmd.exe /C \"set NODE_PATH=./src&& nodemon src/server/app\""
   }
 }

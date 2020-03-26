@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Schema = require('mongoose').Schema;
 
 const struct = new Schema({
-    ...require("./model").struct,
+    ...require("./modelTemplate").struct,
     isTraining : Boolean,
     hasTrained : Boolean
 });

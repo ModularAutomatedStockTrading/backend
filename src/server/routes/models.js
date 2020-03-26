@@ -5,25 +5,25 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
     const modelTemplateID = req.body.data.modelTemplateID;
-    const modelTemplate = await ModelTemplate.findById(modelID);
-    delete model._id;
+    const modelTemplate = (await ModelTemplate.findById(modelTemplateID)).toObject();
+    delete modelTemplate._id;
     const model = new Model({
-        ...modelTemplate.toObject(),
+        ...modelTemplate,
         name : req.body.data.name,
         description : req.body.data.description
     });
     model.save();
-    res.send({model : model.toObject()});
+    res.send({model});
 });
 
 router.get("/", async (req, res) => {
     const models = await Model.find();
-    res.send({models : models.toObject()});
+    res.send({models});
 });
 
 router.patch("/:id", async (req, res) => {
     const model = await Model.findByIdAndUpdate(req.params.id, req.body.data, {new : true});
-    res.send({model : model.toObject()});
+    res.send({model});
 });
 
 router.delete("/:id", async (req, res) => {
