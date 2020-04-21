@@ -7,11 +7,16 @@ const buildQueryString = obj => {
         res.push(key);
         res.push("=");
         res.push(obj[key]);
-        if((--cnt) != 0)  res.push("&");
+        if((--cnt) != 0) res.push("&");
     }
     return res.join("");
 }
 
 const fetchJSON = async (url) => {
     return await(await fetch(url)).json();
+}
+
+module.exports = {
+    fetchJSON,
+    buildQueryString
 }
