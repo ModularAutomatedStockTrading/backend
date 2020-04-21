@@ -8,18 +8,18 @@ class ModelTrainer {
 public:
     ModelTrainer(int layer_cnt, int* model, std::vector<std::vector<int>>& input, std::vector<std::vector<int>>& output);
     int getInputSize();
-    void generateRandomGeneration();
+    /*void generateRandomGeneration();
     void generateMutatedGeneration(int id);
     NeuralNetwork generateMutatedInstance(NeuralNetwork instance);
     int evaluateInstance(int id);
     int getBestInstanceFromGeneration();
-    int train(std::pair<double, double> mutationRate, int numberOfGenerations, int instancesPerGeneration);
+    int train(std::pair<double, double> mutationRate, int numberOfGenerations, int instancesPerGeneration);*/
 private:
     std::vector<std::vector<int>> training_data_input;
     std::vector<std::vector<int>> training_data_output;
-    std::vector<NeuralNetwork> neuralNetworks;
+    /*std::vector<NeuralNetwork> neuralNetworks;
     NeuralNetwork model;
-    std::pair<double, double> modifyRange;
+    std::pair<double, double> modifyRange;*/
 };
 
 #endif // MODELTRAINER_H_INCLUDED

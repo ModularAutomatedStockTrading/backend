@@ -5,7 +5,7 @@ ModelTrainer::ModelTrainer(int layer_cnt, int* model, std::vector<std::vector<in
     training_data_output = output;
 }
 
-void ModelTrainer::generateRandomGeneration() {
+/*void ModelTrainer::generateRandomGeneration() {
     for (int i = 0; i < neuralNetworks.size(); i++) {
         neuralNetworks[i] = model.generateRandomInstance();
     }
@@ -58,7 +58,7 @@ int ModelTrainer::train(std::pair<double, double> mutationRate, int numberOfGene
         generateMutatedGeneration(best);
     }
     return best;
-}
+}*/
 
 int ModelTrainer::getInputSize() {
     return ModelTrainer::training_data_input.size();

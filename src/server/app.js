@@ -19,7 +19,7 @@ const port = 4000;
 
 app.use("/models", modelRoutes);
 app.use("/modelTemplates", modelTemplateRoutes);
-app.use("/api", tradingRoutes);
+app.use("/trading-api", tradingRoutes);
 
 mongoose.connect('mongodb://localhost:27017/mtd', {useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.set('useFindAndModify', false);

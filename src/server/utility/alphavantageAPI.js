@@ -1,3 +1,4 @@
+const {buildQueryString, fetchJSON} = require("./request")
 const API_KEY = process.env.API_KEY;
 const API_URL = "https://www.alphavantage.co/query";
 const default_API_config = {
