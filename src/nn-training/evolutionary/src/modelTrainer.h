@@ -20,7 +20,7 @@ private:
     std::vector<std::vector<int>> training_data_output;
     std::vector<NeuralNetwork> neuralNetworks;
     std::pair<double, double> modifyRange;
-    vector<int> modelTemplate;
+    std::vector<int> modelTemplate;
 };
 
 #endif // MODELTRAINER_H_INCLUDED
