@@ -41,13 +41,18 @@ router.post("/:id/train", async (req, res) => {
     res.send({model});
     
     const modelService = new ModelService(model);
-    modelService.train().then(result => {   
+    modelService.fetchTrainingData().then(() => {
+        modelService.train().then(() => {
+            //
+        })
+    });
+    /*modelService.train().then(result => {   
         Model.findById(req.params.id).then(model => {
             model.hasTrained = true;
             model.isTraining = false;
             model.save();
         });
-    });
+    });*/
 })
 
 module.exports = router;

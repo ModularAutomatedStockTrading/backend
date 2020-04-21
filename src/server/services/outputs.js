@@ -37,6 +37,7 @@ module.exports.getOutputData = output => new Promise((resolve, reject) => {
         const indicator = value[2];
         const action = value[3];
         const amount = value[4];
+        //console.log(output, company, indicator, action, amount)
         fetchFromAPI({
             function : "TIME_SERIES_INTRADAY",
             symbol : company,
@@ -44,7 +45,7 @@ module.exports.getOutputData = output => new Promise((resolve, reject) => {
             outputsize : "compact"
         }).then(response => {
             //console.log(response)
-            const res = []
+            const res = {}
             const indicatorKey = `${companyStockIndicators.indexOf(indicator)+1}. ${indicator}`
             const datapoints = {};
             for(const time in response["Time Series (1min)"]){
@@ -57,12 +58,10 @@ module.exports.getOutputData = output => new Promise((resolve, reject) => {
                 const indicatorValue = Number(datapoints[time][indicatorKey]);
                 const nextIndicatorValue = Number(datapoints[nextMinute][indicatorKey]);
                 //console.log(indicatorValue, nextIndicatorValue)
-                res.push({
-                    time : Number(time),
-                    value : action == "UP" ? 
-                        nextIndicatorValue / indicatorValue >= (1 + amount / 10000) : 
-                        nextIndicatorValue / indicatorValue <= (1 - amount / 10000)
-                })
+                res[Number(time)] = action == "UP" ? 
+                    Number(nextIndicatorValue / indicatorValue >= (1 + amount / 10000)) : 
+                    Number(nextIndicatorValue / indicatorValue <= (1 - amount / 10000))
+                ;
                 /*console.log({
                     time : Number(time),
                     value : action == "UP" ? 
@@ -70,7 +69,10 @@ module.exports.getOutputData = output => new Promise((resolve, reject) => {
                         nextIndicatorValue / indicatorValue < (1 - amount / 10000)
                 }, datapoints[time], datapoints[nextMinute])*/
             }
-            resolve(res)
+            resolve({
+                datapoints : res,
+                type : "output"
+            })
         })
     }
 })

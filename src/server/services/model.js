@@ -30,12 +30,58 @@ evolutionaryTrainer.train(
     ],
 ]*/
 
-module.exports = class Model{
+const {getInputData} = require("src/server/services/inputs")
+const {getOutputData} = require("src/server/services/outputs")
+
+module.exports = class ModelService{
     constructor(model){
+        this.model = model;
+        this.inputs = []
+        this.outputs = []
         console.log(model)
     }
 
+    fetchTrainingData(){
+        return new Promise((resolve, reject) => {
+            const promises = []
+            for(const input of this.model.inputs){
+                promises.push(getInputData(input));
+            }
+            for(const output of this.model.outputs){
+                promises.push(getOutputData(output));
+            }
+            Promise.all(promises).then(results => {
+                console.log(results)
+                for(const time in results[0].datapoints){
+                    let b = true;
+                    for(let i = 0; i < results.length; i++){
+                        if(results[i].datapoints[time] == undefined){
+                            b = false;
+                            break;
+                        }
+                    }
+                    if(b){
+                        const inputVector = []
+                        const outputVector = []
+                        for(let i = 0; i < results.length; i++){
+                            if(results[i].type == 'input'){
+                                inputVector.push(results[i].datapoints[time])
+                            }else{
+                                outputVector.push(results[i].datapoints[time])
+                            }
+                        }
+                        this.inputs.push(inputVector)
+                        this.outputs.push(outputVector)
+                    }
+                }
+                resolve()
+            })
+        })
+    }
+
     train(){
+        console.log(this.inputs)
+        console.log(this.outputs)
         return new Promise((resolve, reject) => {
             resolve("result")
         })
