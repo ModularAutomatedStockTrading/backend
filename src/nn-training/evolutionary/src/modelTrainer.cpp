@@ -1,28 +1,46 @@
 #include "modelTrainer.h"
+#include <stdlib.h>
+#include <time.h>
 
 ModelTrainer::ModelTrainer(int layer_cnt, int* model, std::vector<std::vector<int>>& input, std::vector<std::vector<int>>& output) {
     training_data_input = input;
     training_data_output = output;
+
+    modelTemplate.resize(layer_cnt);
+    for (int i = 0; i < layer_cnt; i++)
+        modelTemplate[i] = model[i];
 }
 
 void ModelTrainer::generateRandomGeneration() {
     for (int i = 0; i < neuralNetworks.size(); i++) {
-        neuralNetworks[i] = model.generateRandomInstance();
+        generateRandomInstance(i);
     }
-    return;
+}
+
+void ModelTrainer::generateRandomInstance(int id) {
+    srand(time(NULL));
+    std::vector<std::vector<std::vector<double>>> NN(modelTemplate.size());
+    for (int i = 0; i < modelTemplate.size() - 1; i++) {
+        NN[i].resize(modelTemplate[i]);
+        for (int j = 0; j < modelTemplate[i]; j++) {
+            NN[i][j].resize(modelTemplate[i + 1]);
+            for (int k = 0; k < modelTemplate[i + 1]; k++) {
+                NN[i][j][k] = (double)rand() / RAND_MAX;
+            }
+        }
+    }
+    neuralNetworks[i] = new NeuralNetwork(NN);
 }
 
 void ModelTrainer::generateMutatedGeneration(int id) {
-    NeuralNetwork best = neuralNetworks[id];
     for (int i = 0; i < neuralNetworks.size(); i++) {
-        neuralNetworks[i] = ModelTrainer::generateMutatedInstance(best);
+        generateMutatedInstance(neuralNetworks[id], i);
     }
-    return;
 }
 
-NeuralNetwork ModelTrainer::generateMutatedInstance(NeuralNetwork instance) {
+void ModelTrainer::generateMutatedInstance(NeuralNetwork instance, int id) {
     instance.modifyWeights(modifyRange.first, modifyRange.second);
-    return instance;
+    neuralNetworks[id] = instance;
 }
 
 int ModelTrainer::evaluateInstance(int id) {
@@ -60,6 +78,6 @@ int ModelTrainer::train(std::pair<double, double> mutationRate, int numberOfGene
     return best;
 }
 
-int ModelTrainer::getInputSize() {
-    return ModelTrainer::training_data_input.size();
+std::vector<std::vector<std::vector<double>>> ModelTrainer::get_model(int id) {
+    return neuralNetworks[id].get_NN();
 }

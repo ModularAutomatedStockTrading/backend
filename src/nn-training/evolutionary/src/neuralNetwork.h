@@ -3,9 +3,12 @@
 
 class NeuralNetwork {
 public:
-    NeuralNetwork();
+    NeuralNetwork(std::vector<std::vector<std::vector<int>>> model);
+    std::vector<std::vector<std::vector<int>>> get_NN();
+    std::vector<int> predict(std::vector<int> input);
+    void modifyWeights(double lower, double upper);
 private:
-    int a;
+    std::vector<std::vector<std::vector<int>>> NN;
 };
 
 #endif // NEURALNETWORK_H_INCLUDED
