@@ -93,6 +93,8 @@ Napi::Value ClassWrapper::GetInputSize(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     Napi::HandleScope scope(env);
 
+    while (1);
+
     int num = this->modelTrainer_->getInputSize();
     return Napi::Number::New(env, num);
 }

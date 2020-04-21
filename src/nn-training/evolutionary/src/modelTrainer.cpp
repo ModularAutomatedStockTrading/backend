@@ -48,7 +48,7 @@ int ModelTrainer::getBestInstanceFromGeneration() {
     return best;
 }
 
-int ModelTrainer::train(pair<double, double> mutationRate, int numberOfGenerations, int instancesPerGeneration) {
+int ModelTrainer::train(std::pair<double, double> mutationRate, int numberOfGenerations, int instancesPerGeneration) {
     modifyRange = mutationRate;
     neuralNetworks.resize(instancesPerGeneration);
     generateRandomGeneration();

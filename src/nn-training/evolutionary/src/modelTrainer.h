@@ -13,13 +13,13 @@ public:
     NeuralNetwork generateMutatedInstance(NeuralNetwork instance);
     int evaluateInstance(int id);
     int getBestInstanceFromGeneration();
-    void train();
+    int train(std::pair<double, double> mutationRate, int numberOfGenerations, int instancesPerGeneration);
 private:
     std::vector<std::vector<int>> training_data_input;
     std::vector<std::vector<int>> training_data_output;
     std::vector<NeuralNetwork> neuralNetworks;
     NeuralNetwork model;
-    pair<double, double> modifyRange;
+    std::pair<double, double> modifyRange;
 };
 
 #endif // MODELTRAINER_H_INCLUDED
