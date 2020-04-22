@@ -101,6 +101,7 @@ module.exports = class ModelService{
             const result = this.evolutionaryTrainer.train(0.95, 1.05, 100, 100)
             resolve(result)
             */
+            resolve("result")
         })
     }
 }
