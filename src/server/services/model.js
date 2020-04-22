@@ -1,4 +1,4 @@
-//const NNtrainer = require('build/Release/test');
+//const NNengine = require('build/Release/NN-engine');
 
 /*const evolutionaryTrainer = new NNtrainer.EvolutionaryTrainer(
     layercount : int,
@@ -51,7 +51,6 @@ module.exports = class ModelService{
                 promises.push(getOutputData(output));
             }
             Promise.all(promises).then(results => {
-                console.log(results)
                 for(const time in results[0].datapoints){
                     let b = true;
                     for(let i = 0; i < results.length; i++){
@@ -83,7 +82,25 @@ module.exports = class ModelService{
         console.log(this.inputs)
         console.log(this.outputs)
         return new Promise((resolve, reject) => {
-            resolve("result")
+            if(this.inputs.length < 10) resolve(null);
+            const modelArray = 
+                [this.model.amountOfInputsNodes]
+                .concat(this.model.amountOfHiddenLayerNodes)
+                .concat([this.model.amountOfOutputNodes])
+            ;
+            /*
+            this.evolutionaryTrainer = new NNengine.EvolutionaryTrainer(
+                this.model.amountOfHiddenLayers + 2,
+                modelArray,
+                this.inputs.length,
+                this.inputs[0].length,
+                this.inputs,
+                this.outputs[0].length,
+                this.outputs
+            );
+            const result = this.evolutionaryTrainer.train(0.95, 1.05, 100, 100)
+            resolve(result)
+            */
         })
     }
 }

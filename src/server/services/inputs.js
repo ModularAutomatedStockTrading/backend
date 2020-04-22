@@ -37,7 +37,7 @@ module.exports.getInputData = input => new Promise((resolve, reject) => {
             function : "TIME_SERIES_INTRADAY",
             symbol : company,
             interval : "1min",
-            outputsize : "compact"
+            outputsize : "full"
         }).then(response => {
             const res = []
             const indicatorKey = `${companyStockIndicators.indexOf(indicator)+1}. ${indicator}`

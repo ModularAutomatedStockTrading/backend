@@ -42,7 +42,7 @@ module.exports.getOutputData = output => new Promise((resolve, reject) => {
             function : "TIME_SERIES_INTRADAY",
             symbol : company,
             interval : "1min",
-            outputsize : "compact"
+            outputsize : "full"
         }).then(response => {
             //console.log(response)
             const res = {}
