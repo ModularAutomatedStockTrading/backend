@@ -7,7 +7,7 @@ Napi::Object ClassWrapper::Init(Napi::Env env, Napi::Object exports) {
 
     Napi::Function func = DefineClass(env, "EvolutionaryModelTrainer", {
         /*InstanceMethod("add", &ClassWrapper::Add),*/
-        InstanceMethod("Train", &ClassWrapper::Train())/*,*/
+        InstanceMethod("Train", &ClassWrapper::Train)/*,*/
     });
 
     constructor = Napi::Persistent(func);
@@ -40,7 +40,7 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
     int input_cnt = arg4.Int32Value();
     int output_cnt = arg6.Int32Value();
 
-    int model[layer_cnt];
+    std::vector<int> model(layer_cnt);
     for(int i = 0; i < arg2.Length(); i++) {
         Napi::Value value = arg2[i];
         if (value.IsNumber()) {
@@ -82,7 +82,7 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
         }
     }
 
-    this->modelTrainer_ = new ModelTrainer(layer_cnt, model, input, output);
+    this->modelTrainer_ = new ModelTrainer(model, input, output);
 }
 
 Napi::Value ClassWrapper::Train(const Napi::CallbackInfo& info) {
@@ -115,12 +115,12 @@ Napi::Value ClassWrapper::Train(const Napi::CallbackInfo& info) {
     int instancesPerGeneration = (int)info[3].As<Napi::Number>();
     int id = this->modelTrainer_->train(mutationRate, numberOfGenerations, instancesPerGeneration);
 
-    std::vector<std::vector<std::vector<int>>> model = this->modelTrainer_->get_model_NN();
+    std::vector<std::vector<std::vector<double>>> model = this->modelTrainer_->get_model(id);
     napi_value nn;
     napi_create_array(env, &nn);
     for (int i = 0; i < model.size(); i++) {
         napi_value nn_nodes;
-        (napi_create_array(env, &nn_nodes);
+        napi_create_array(env, &nn_nodes);
         for (int j = 0; j < model[i].size(); j++) {
             napi_value nn_weights;
             napi_create_array(env, &nn_weights);
@@ -132,7 +132,7 @@ Napi::Value ClassWrapper::Train(const Napi::CallbackInfo& info) {
         napi_set_element(env, nn, i, nn_nodes);
     }
 
-    return nn;
+    return Napi::Value::Value(env, nn);
 }
 
 /*

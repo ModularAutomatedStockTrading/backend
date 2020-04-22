@@ -6,7 +6,7 @@
 
 class ModelTrainer {
 public:
-    ModelTrainer(int layer_cnt, int* model, std::vector<std::vector<int>>& input, std::vector<std::vector<int>>& output);
+    ModelTrainer(std::vector<int>& model, std::vector<std::vector<int>>& input, std::vector<std::vector<int>>& output);
     void generateRandomGeneration();
     void generateRandomInstance(int id);
     void generateMutatedGeneration(int id);
@@ -14,7 +14,7 @@ public:
     int evaluateInstance(int id);
     int getBestInstanceFromGeneration();
     int train(std::pair<double, double> mutationRate, int numberOfGenerations, int instancesPerGeneration);
-    std::vector<std::vector<std::vector<int>>> get_model(int id);
+    std::vector<std::vector<std::vector<double>>> get_model(int id);
 private:
     std::vector<std::vector<int>> training_data_input;
     std::vector<std::vector<int>> training_data_output;

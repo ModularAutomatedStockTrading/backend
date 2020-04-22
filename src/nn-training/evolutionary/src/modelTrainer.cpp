@@ -2,13 +2,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-ModelTrainer::ModelTrainer(int layer_cnt, int* model, std::vector<std::vector<int>>& input, std::vector<std::vector<int>>& output) {
+ModelTrainer::ModelTrainer(std::vector<int>& model, std::vector<std::vector<int>>& input, std::vector<std::vector<int>>& output) {
     training_data_input = input;
     training_data_output = output;
-
-    modelTemplate.resize(layer_cnt);
-    for (int i = 0; i < layer_cnt; i++)
-        modelTemplate[i] = model[i];
+    modelTemplate = model;
 }
 
 void ModelTrainer::generateRandomGeneration() {
@@ -29,7 +26,7 @@ void ModelTrainer::generateRandomInstance(int id) {
             }
         }
     }
-    neuralNetworks[i] = new NeuralNetwork(NN);
+    neuralNetworks[id].set_NN(NN);
 }
 
 void ModelTrainer::generateMutatedGeneration(int id) {
@@ -68,7 +65,7 @@ int ModelTrainer::getBestInstanceFromGeneration() {
 
 int ModelTrainer::train(std::pair<double, double> mutationRate, int numberOfGenerations, int instancesPerGeneration) {
     modifyRange = mutationRate;
-    neuralNetworks.resize(instancesPerGeneration);
+    neuralNetworks = std::vector<NeuralNetwork>(instancesPerGeneration, NeuralNetwork(std::vector<std::vector<std::vector<double>>>()));
     generateRandomGeneration();
     int best;
     for (int i = 0; i < numberOfGenerations; i++) {

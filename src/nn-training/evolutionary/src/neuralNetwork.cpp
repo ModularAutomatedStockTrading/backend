@@ -1,33 +1,32 @@
-
-#include <vector>
-#include <iostream>
-#include <ctime>
-#include <string>
-/*
-det der stod før jeg ændrede noget:)
 #include "neuralNetwork.h"
 
-NeuralNetwork::NeuralNetwork() {
-    NeuralNetwork::a = 5;
+NeuralNetwork::NeuralNetwork(std::vector<std::vector<std::vector<double>>> model) {
+    NN = model;
 }
-efter:
-*/
+
+std::vector<std::vector<std::vector<double>>> NeuralNetwork::get_NN() {
+    return NN;
+}
+
+void NeuralNetwork::set_NN(std::vector<std::vector<std::vector<double>>> NN) {
+    this->NN = NN;
+}
+
+std::vector<int> NeuralNetwork::predict(std::vector<int> input) {
+    return input;
+}
+
+void NeuralNetwork::modifyWeights(double lower, double upper) {
+    return;
+}
+
+/*
 std::vector<std::vector<double>> mult(std::vector<std::vector<double>>& a, std::vector<std::vector<double>>& b) {
 	std::vector<std::vector<double>> c(a.size(), std::vector<double>(b[0].size(), 0));
-	for (int i = 0; i < c.size(); i++) {
-		for (int j = 0; j < c[i].size(); j++) {
-			for (int k = 0; k < b.size(); k++) {
+	for (int i = 0; i < c.size(); i++)
+		for (int j = 0; j < c[i].size(); j++)
+			for (int k = 0; k < b.size(); k++)
 				c[i][j] += a[i][k] * b[k][j];
-			}
-			//print
-			/*if (j == 0 && i > 0) { std::cout << '}' << '\n' << '\t' << '{' << c[i][j]; }
-			else if (j == 0 && i == 0) { std::cout << '{' << '\n' << '\t' << '{' << c[i][j]; }
-			else if (j > 0) { std::cout << ',' << ' ' << c[i][j]; };*/
-		}
-	}
-	//print
-	//std::cout << '}' << '\n' << '}' << ';';
-
 	return c;
 }
 
@@ -43,7 +42,7 @@ std::vector<std::vector<std::vector<double>>> generateRandomInstance(int layers,
 			NN[i][j] = std::vector<double>(nodesInLayers[i + 1], 0);
 			std::cout << '[' << ' ';
 			for (int k = 0; k < nodesInLayers[i + 1]; k++) {
-				NN[i][j][k] = (double)(((std::rand() % 19) + 1) / 10.0); //random numbers between 0.1 to 1.9
+				NN[i][j][k] = (std::rand() % 19 + 1) / (double)10; //random numbers between 0.1 to 1.9
 				std::cout << NN[i][j][k] << ' ';
 			}
 			std::cout << ']' << '\n';
@@ -60,9 +59,9 @@ std::vector<std::vector<double>> predict(std::vector<std::vector<double>> input,
 		}
 		in = mult(out, NN[l]);
 	}
-	
+
 	for(int a = 0; a < in[0].size(); a++) {
-		std::cout << '['; 
+		std::cout << '[';
 		for(int b = 0; b < input[0].size() -1; b++) {
 			std::cout << input[0][b] << ", ";
 		}
@@ -86,3 +85,4 @@ int main()
 	input[0][3] = 4;
 	std::vector<std::vector<double>> prediction = predict(input, NN);
 }
+*/
