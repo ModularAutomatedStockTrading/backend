@@ -18,7 +18,7 @@
   "scripts": {
     "start-linux": "NODE_PATH=. nodemon src/server/app",
     "start-windows": "cmd.exe /C \"set NODE_PATH=.&& nodemon src/server/app\"",
-    "compile" : "yarn node-gyp rebuild",
+    "compile" : "node-gyp rebuild",
     "runtest" : "node test.js"
   },
   "devDependencies": {
