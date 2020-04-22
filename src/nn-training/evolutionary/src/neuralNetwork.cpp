@@ -3,11 +3,15 @@
 #include <iostream>
 #include <ctime>
 #include <string>
-/*#include "neuralNetwork.h"
+/*
+det der stod før jeg ændrede noget:)
+#include "neuralNetwork.h"
 
 NeuralNetwork::NeuralNetwork() {
     NeuralNetwork::a = 5;
-}*/
+}
+efter:
+*/
 std::vector<std::vector<double>> mult(std::vector<std::vector<double>>& a, std::vector<std::vector<double>>& b) {
 	std::vector<std::vector<double>> c(a.size(), std::vector<double>(b[0].size(), 0));
 	for (int i = 0; i < c.size(); i++) {
@@ -82,82 +86,3 @@ int main()
 	input[0][3] = 4;
 	std::vector<std::vector<double>> prediction = predict(input, NN);
 }
-
-/*
-#include "neuralNetwork.h"
-#include <vector>
-#include <iostream>
-NeuralNetwork::NeuralNetwork() {
-    int layer_count;
-    std::vector<std::vector<std::vector<int>>> NN;
-    std::vector<Layer> layers(layer_count, Layer::Layer());
-    //hvert layer har x antal nodes og en 2D vektor weights med vægtene. layers[n].weights har dimensionerne layers[n+1].nodes.length x layers[n].nodes.length
-    //hver node har en .in og .out værdi og en .activate() funktion som tager .in og returnere .out
-    
-    std::vector<std::vector<std::vector<int>>> generateRandomInstance(int layers, std::vector<int> nodesInLayers){ // returnere en neuralnetwork instance ud fra en model template med random weights
-        std::vector<int> NN((layers -1), 0);
-        for(int i; i < (layers -1)) {
-            NN[i] = std::vector(nodesInLayers[i], 0);
-            for(int j; j < nodesInLayers[i]) {
-                NN[i][j] = std::vector(nodesInLayers[i+1], 0);
-                std::cout << '[ ';
-                for(int k; k < nodesInLayers[i+1]) {
-                    NN[i][j][k] = (1 + (std::rand() % 20))/10; //random numbers between 0.1 to 1.9
-                    std::cout << NN[i][j][k] << ' '; 
-                }
-                std::cout << ']' << '\n';
-            }
-        }
-    }
-    std::vector<int> predict(std::vector<int> inputVector) {
-        for(int n; n < layes[1])
-        for(int l;l<this.layers.length;l++) {
-            
-            
-            for (int n; n<model.layers[l].nodes;n++){
-                for (int w; w<model.layers[l].nodes[n].weights;w++) {
-                this.layers[l].nodes[n].in = v[n]*this.layers[l].nodes[n].weights[w];
-                this.layers[l].nodes[n].activate();//sætter node.out = activation(node.in) hvor activation fx. er ReLU
-                }
-            }
-
-
-            v = layers[l].out()
-        }
-
-
-    }//køre en vector "igennem" den færdige model
-}
-NeuralNetwork::modifyWights(double upper, double lower) {}// modificere alle vægte med en random værdi mellem upper og lower 
-
-class Node{
-    Node() {
-        int in;
-        int out;
-    }
-    void activate(){
-        this.out = ReLU(this.in)//ReLU er et eksempel
-    }
-
-};
-class Layer{
-    Layer(int intNodes) {
-        int intNodes = intNodes;
-        std::vector<Node> nodes(intNodes, Node());
-        std::vector<int> in;
-        std::vector<int> out;
-        std::vector<std::vector<int>> weights;
-    }
-    void getIO() {
-        for(int i;i<this.intNodes;i++) {
-            this.in[i] = this.nodes[i].in;
-            this.nodes[i].activate();
-            this.out[i] = this.nodes[i].out;
-        }
-        
-    }
-
-};
-
-
-instance = modelTemplate.generateRandomInstance()*/
