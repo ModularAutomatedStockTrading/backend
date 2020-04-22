@@ -83,6 +83,19 @@ int main()
 	input[0][1] = 2;
 	input[0][2] = 3;
 	input[0][3] = 4;
+
+    //set NN to test NN = [[[1.1, 1.2], [1.3, 0.2], [1.2, 1.2], [1.3, 3.4]], [[0.9], [1.0]]] remember to set nodesInLayers = [4, 2, 1], predict should be 30.05 with input [[1, 2, 3, 4]]
+	//int l = 0;
+	//double n[] = { 1.1, 1.2, 1.3, 0.2, 1.2, 1.2, 1.3, 3.4, 0.9, 1.0 };
+	//for (int i = 0; i < NN.size(); i++) {
+	//	for (int j = 0; j < NN[i].size(); j++) {
+	//		for (int k = 0; k < NN[i][j].size(); k++) {
+	//			NN[i][j][k] = n[l];
+	//			l++;
+	//		}
+	//	}
+	//}
+
 	std::vector<std::vector<double>> prediction = predict(input, NN);
 }
 */
