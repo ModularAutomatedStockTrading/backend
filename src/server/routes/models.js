@@ -1,8 +1,8 @@
 const express = require("express");
-const Model = require("server/schema/model").model;
-const ModelTemplate = require("server/schema/modelTemplate").model;
+const Model = require("src/server/schema/model").model;
+const ModelTemplate = require("src/server/schema/modelTemplate").model;
 const router = express.Router();
-const ModelService = require("server/services/model")
+const ModelService = require("src/server/services/model")
 
 router.post("/", async (req, res) => {
     const modelTemplateID = req.body.data.modelTemplateID;
@@ -38,15 +38,25 @@ router.post("/:id/train", async (req, res) => {
     model.isTraining = true;
     model.save();
 
-    res.sendStatus({model});
+    res.send({model});
     
     const modelService = new ModelService(model);
-    //modelService.train();
-    //const res = modelService.getResult();
-    
-    model.hasTrained = true;
-    model.isTraining = false;
-    model.save();
+    modelService.fetchTrainingData().then(() => {
+        modelService.train().then(() => {
+            Model.findById(req.params.id).then(model => {
+                model.hasTrained = true;
+                model.isTraining = false;
+                model.save();
+            });
+        })
+    });
+    /*modelService.train().then(result => {   
+        Model.findById(req.params.id).then(model => {
+            model.hasTrained = true;
+            model.isTraining = false;
+            model.save();
+        });
+    });*/
 })
 
 module.exports = router;

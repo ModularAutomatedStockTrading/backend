@@ -11,7 +11,7 @@ public:
 
 private:
     static Napi::FunctionReference constructor; //reference to store the class definition that needs to be exported to JS
-    Napi::Value GetInputSize(const Napi::CallbackInfo& info); //wrapped getInputSize function
+    Napi::Value Train(const Napi::CallbackInfo& info); //wrapped getInputSize function
     //Napi::Value Add(const Napi::CallbackInfo& info); //wrapped add function
     ModelTrainer *modelTrainer_; //internal instance of modelTrainer used to perform actual operations.
 };
