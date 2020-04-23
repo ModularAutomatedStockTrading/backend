@@ -3,7 +3,7 @@ const ATE = require("src/server/schema/ATE").model;
 const router = express.Router();
 
 router.post("/", (req, res) => {
-    const ate = new ATE(req.body.ATE);
+    const ate = new ATE(req.body.data);
     ate.save();
     res.send({ATE : ate});
 });
