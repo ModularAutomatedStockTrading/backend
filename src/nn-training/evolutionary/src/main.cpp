@@ -1,4 +1,4 @@
-#include "./napi.h"
+#include <napi.h>
 #include "./classwrapper.h"
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {

@@ -1,75 +1,64 @@
 #include "neuralNetwork.h"
 
-NeuralNetwork::NeuralNetwork(std::vector<std::vector<std::vector<double>>> model) {
-    NN = model;
+NeuralNetwork::NeuralNetwork() {
+    NN = std::vector<std::vector<std::vector<double>>>();
 }
 
-std::vector<std::vector<std::vector<double>>> NeuralNetwork::get_NN() {
-    return NN;
+void NeuralNetwork::get_NN(std::vector<std::vector<std::vector<double>>>& NN) {
+    NN = this->NN;
 }
 
-void NeuralNetwork::set_NN(std::vector<std::vector<std::vector<double>>> NN) {
-    this->NN = NN;
+std::vector<double> NeuralNetwork::matrixMultiplication(
+    std::vector<double>& a,
+    std::vector<std::vector<double>> b
+) {
+    std::vector<double> res(b[0].size(), 0);
+    for (int i = 0; i < res.size(); i++)
+        for (int j = 0; j < b.size(); j++)
+            res[i] += a[j] * b[j][i];
+    return res;
 }
 
-std::vector<int> NeuralNetwork::predict(std::vector<int> input) {
-    return input;
+void NeuralNetwork::predict(std::vector<double>& input, std::vector<double>& output) {
+	std::vector<double> current = input;
+	for (int layer = 0; layer <= NN.size(); layer++) {
+		for (int i = 0; i < current.size(); i++) {
+			current[i] = activate(current[i]);
+		}
+		if (layer != NN.size())
+            current = matrixMultiplication(current, NN[layer]);
+	}
+	output = current;
 }
 
-void NeuralNetwork::modifyWeights(double lower, double upper) {
-    return;
-}
-
-/*
-std::vector<std::vector<double>> mult(std::vector<std::vector<double>>& a, std::vector<std::vector<double>>& b) {
-	std::vector<std::vector<double>> c(a.size(), std::vector<double>(b[0].size(), 0));
-	for (int i = 0; i < c.size(); i++)
-		for (int j = 0; j < c[i].size(); j++)
-			for (int k = 0; k < b.size(); k++)
-				c[i][j] += a[i][k] * b[k][j];
-	return c;
-}
-
-double activate(double a) {
+double NeuralNetwork::activate(double a) {
 	return a;
 }
 
-std::vector<std::vector<std::vector<double>>> generateRandomInstance(int layers, std::vector<int> nodesInLayers) { // returnere en neuralnetwork instance ud fra en model template med random weights
-	std::vector<std::vector<std::vector<double>>> NN(layers - 1, std::vector<std::vector<double>>(1, std::vector<double>(1, 0)));
-	for (int i = 0; i < (layers - 1); i++) {
-		NN[i] = std::vector<std::vector<double>>(nodesInLayers[i], std::vector<double>());
-		for (int j = 0; j < nodesInLayers[i]; j++) {
-			NN[i][j] = std::vector<double>(nodesInLayers[i + 1], 0);
-			std::cout << '[' << ' ';
-			for (int k = 0; k < nodesInLayers[i + 1]; k++) {
-				NN[i][j][k] = (std::rand() % 19 + 1) / (double)10; //random numbers between 0.1 to 1.9
-				std::cout << NN[i][j][k] << ' ';
-			}
-			std::cout << ']' << '\n';
-		}
-	}
-	return NN;
-}
-std::vector<std::vector<double>> predict(std::vector<std::vector<double>> input, std::vector<std::vector<std::vector<double>>> NN) {
-	std::vector<std::vector<double>> in = input;
-	for (int l = 0; l < NN.size(); l++) {
-		std::vector<std::vector<double>> out = in;
-		for (int i = 0; i < in[0].size(); i++) {
-			out[0][i] = activate(in[0][i]);
-		}
-		in = mult(out, NN[l]);
-	}
-
-	for(int a = 0; a < in[0].size(); a++) {
-		std::cout << '[';
-		for(int b = 0; b < input[0].size() -1; b++) {
-			std::cout << input[0][b] << ", ";
-		}
-		std::cout << input[0][input[0].size()-1] << "] --> " << in[0][a];
-	}
-	return in;
+void NeuralNetwork::modifyWeights(double mutationRange) {
+    for (int i = 0; i < NN.size(); i++) {
+        for (int j = 0; j < NN[i].size(); j++) {
+            for (int k = 0; k < NN[i][j].size(); k++) {
+                NN[i][j][k] += (double)(rand() % (int)(mutationRange * 1000000 * 2)) / 1000000 - mutationRange;
+            }
+        }
+    }
 }
 
+void NeuralNetwork::generateRandomInstance(std::vector<int>& modelTemplate) {
+    NN.resize(modelTemplate.size());
+    for (int i = 0; i < modelTemplate.size() - 1; i++) {
+        NN[i].resize(modelTemplate[i]);
+        for (int j = 0; j < modelTemplate[i]; j++) {
+            NN[i][j].resize(modelTemplate[i + 1]);
+            for (int k = 0; k < modelTemplate[i + 1]; k++) {
+                NN[i][j][k] = (double)rand() / RAND_MAX;
+            }
+        }
+    }
+}
+
+/*
 int main()
 {
 	std::srand(time(NULL));

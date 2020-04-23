@@ -1,6 +1,6 @@
 {
     "targets": [{
-        "target_name": "NN-engine",
+        "target_name": "NN_engine",
         "cflags!": [ "-fno-exceptions" ],
         "cflags_cc!": [ "-fno-exceptions" ],
         "sources": [

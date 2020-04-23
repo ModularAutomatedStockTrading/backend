@@ -1,49 +1,34 @@
 #include "modelTrainer.h"
-#include <stdlib.h>
-#include <time.h>
 
-ModelTrainer::ModelTrainer(std::vector<int>& model, std::vector<std::vector<int>>& input, std::vector<std::vector<int>>& output) {
+ModelTrainer::ModelTrainer(std::vector<int>& model, std::vector<std::vector<double>>& input, std::vector<std::vector<double>>& output) {
     training_data_input = input;
     training_data_output = output;
     modelTemplate = model;
 }
 
 void ModelTrainer::generateRandomGeneration() {
+    /*
+    Generate random instances in neuralNetworks vector
+    Input   -> void
+    Output  -> void
+    */
     for (int i = 0; i < neuralNetworks.size(); i++) {
-        generateRandomInstance(i);
+        neuralNetworks[i].generateRandomInstance(modelTemplate);
     }
-}
-
-void ModelTrainer::generateRandomInstance(int id) {
-    srand(time(NULL));
-    std::vector<std::vector<std::vector<double>>> NN(modelTemplate.size());
-    for (int i = 0; i < modelTemplate.size() - 1; i++) {
-        NN[i].resize(modelTemplate[i]);
-        for (int j = 0; j < modelTemplate[i]; j++) {
-            NN[i][j].resize(modelTemplate[i + 1]);
-            for (int k = 0; k < modelTemplate[i + 1]; k++) {
-                NN[i][j][k] = (double)rand() / RAND_MAX;
-            }
-        }
-    }
-    neuralNetworks[id].set_NN(NN);
 }
 
 void ModelTrainer::generateMutatedGeneration(int id) {
     for (int i = 0; i < neuralNetworks.size(); i++) {
-        generateMutatedInstance(neuralNetworks[id], i);
+        neuralNetworks[i] = neuralNetworks[id];
+        neuralNetworks[i].modifyWeights(mutationRange);
     }
-}
-
-void ModelTrainer::generateMutatedInstance(NeuralNetwork instance, int id) {
-    instance.modifyWeights(modifyRange.first, modifyRange.second);
-    neuralNetworks[id] = instance;
 }
 
 int ModelTrainer::evaluateInstance(int id) {
     int cnt = 0;
     for (int i = 0; i < training_data_input.size(); i++) {
-        std::vector<int> output = neuralNetworks[id].predict(training_data_input[i]);
+        std::vector<double> output;
+        neuralNetworks[id].predict(training_data_input[i], output);
         if (output == training_data_output[i])
             cnt++;
     }
@@ -63,9 +48,10 @@ int ModelTrainer::getBestInstanceFromGeneration() {
     return best;
 }
 
-int ModelTrainer::train(std::pair<double, double> mutationRate, int numberOfGenerations, int instancesPerGeneration) {
-    modifyRange = mutationRate;
-    neuralNetworks = std::vector<NeuralNetwork>(instancesPerGeneration, NeuralNetwork(std::vector<std::vector<std::vector<double>>>()));
+int ModelTrainer::train(double mutationRange, int numberOfGenerations, int instancesPerGeneration) {
+    srand(time(NULL)); // bad
+    this->mutationRange = mutationRange;
+    neuralNetworks = std::vector<NeuralNetwork>(instancesPerGeneration, NeuralNetwork());
     generateRandomGeneration();
     int best;
     for (int i = 0; i < numberOfGenerations; i++) {
@@ -75,6 +61,6 @@ int ModelTrainer::train(std::pair<double, double> mutationRate, int numberOfGene
     return best;
 }
 
-std::vector<std::vector<std::vector<double>>> ModelTrainer::get_model(int id) {
-    return neuralNetworks[id].get_NN();
+void ModelTrainer::get_model(int id, std::vector<std::vector<std::vector<double>>>& NN) {
+    neuralNetworks[id].get_NN(NN);
 }

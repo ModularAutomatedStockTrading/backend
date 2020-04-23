@@ -5,11 +5,16 @@
 
 class NeuralNetwork {
 public:
-    NeuralNetwork(std::vector<std::vector<std::vector<double>>> model);
-    std::vector<std::vector<std::vector<double>>> get_NN();
-    void set_NN(std::vector<std::vector<std::vector<double>>> NN);
-    std::vector<int> predict(std::vector<int> input);
-    void modifyWeights(double lower, double upper);
+    NeuralNetwork();
+    void get_NN(std::vector<std::vector<std::vector<double>>>& NN);
+    void generateRandomInstance(std::vector<int>& modelTemplate);
+    std::vector<double> matrixMultiplication(
+        std::vector<double>& a,
+        std::vector<std::vector<double>> b
+    );
+    void predict(std::vector<double>& input, std::vector<double>& output);
+    double activate(double a);
+    void modifyWeights(double mutationRange);
 private:
     std::vector<std::vector<std::vector<double>>> NN;
 };

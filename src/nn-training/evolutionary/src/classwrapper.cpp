@@ -50,7 +50,7 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
         }
     }
 
-    std::vector<std::vector<int>> input(std::vector<std::vector<int>>(data_point_cnt, std::vector<int>(input_cnt)));
+    std::vector<std::vector<double>> input(std::vector<std::vector<double>>(data_point_cnt, std::vector<double>(input_cnt)));
     for(int i = 0; i < arg5.Length(); i++) {
         Napi::Value assumed_input_array = arg5[i];
         if(assumed_input_array.IsArray()){
@@ -58,7 +58,7 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
             for(int j = 0; j < input_array.Length(); j++) {
                 Napi::Value value = input_array[j];
                 if (value.IsNumber()) {
-                    input[i][j] = (int)value.As<Napi::Number>();
+                    input[i][j] = (double)value.As<Napi::Number>();
                 } else {
                     Napi::TypeError::New(env, "Expected an array of numbers").ThrowAsJavaScriptException();
                 }
@@ -66,7 +66,7 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
         }
     }
 
-    std::vector<std::vector<int>> output(std::vector<std::vector<int>>(data_point_cnt, std::vector<int>(output_cnt)));
+    std::vector<std::vector<double>> output(std::vector<std::vector<double>>(data_point_cnt, std::vector<double>(output_cnt)));
     for(int i = 0; i < arg7.Length(); i++) {
         Napi::Value assumed_output_array = arg7[i];
         if(assumed_output_array.IsArray()){
@@ -74,7 +74,7 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
             for(int j = 0; j < output_array.Length(); j++) {
                 Napi::Value value = output_array[j];
                 if (value.IsNumber()) {
-                    output[i][j] = (int)value.As<Napi::Number>();
+                    output[i][j] = (double)value.As<Napi::Number>();
                 } else {
                     Napi::TypeError::New(env, "Expected an array of numbers").ThrowAsJavaScriptException();
                 }
@@ -89,12 +89,10 @@ Napi::Value ClassWrapper::Train(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     Napi::HandleScope scope(env);
 
-    //std::pair<double, double> mutationRate, int numberOfGenerations, int instancesPerGeneration
-
     int length = info.Length();
 
-    if (length != 4) {
-        Napi::TypeError::New(env, "Expected 4 arguments").ThrowAsJavaScriptException();
+    if (length != 3) {
+        Napi::TypeError::New(env, "Expected 3 arguments").ThrowAsJavaScriptException();
     }
 
     if (!info[0].IsNumber()) {
@@ -106,16 +104,14 @@ Napi::Value ClassWrapper::Train(const Napi::CallbackInfo& info) {
     if (!info[2].IsNumber()) {
         Napi::TypeError::New(env, "Number expected as third argument").ThrowAsJavaScriptException();
     }
-    if (!info[3].IsNumber()) {
-        Napi::TypeError::New(env, "Number expected as forth argument").ThrowAsJavaScriptException();
-    }
 
-    std::pair<double, double> mutationRate = {(double)info[0].As<Napi::Number>(), (double)info[1].As<Napi::Number>()};
-    int numberOfGenerations = (int)info[2].As<Napi::Number>();
-    int instancesPerGeneration = (int)info[3].As<Napi::Number>();
-    int id = this->modelTrainer_->train(mutationRate, numberOfGenerations, instancesPerGeneration);
+    double mutationRange = (double)info[0].As<Napi::Number>();
+    int numberOfGenerations = (int)info[1].As<Napi::Number>();
+    int instancesPerGeneration = (int)info[2].As<Napi::Number>();
+    int id = this->modelTrainer_->train(mutationRange, numberOfGenerations, instancesPerGeneration);
 
-    std::vector<std::vector<std::vector<double>>> model = this->modelTrainer_->get_model(id);
+    std::vector<std::vector<std::vector<double>>> model;
+    this->modelTrainer_->get_model(id, model);
     napi_value nn;
     napi_create_array(env, &nn);
     for (int i = 0; i < model.size(); i++) {
