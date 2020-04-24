@@ -1,4 +1,5 @@
 #include "classwrapper.h"
+#include <iostream>
 
 Napi::FunctionReference ClassWrapper::constructor;
 
@@ -65,7 +66,6 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
             }
         }
     }
-
     std::vector<std::vector<double>> output(std::vector<std::vector<double>>(data_point_cnt, std::vector<double>(output_cnt)));
     for(int i = 0; i < arg7.Length(); i++) {
         Napi::Value assumed_output_array = arg7[i];
@@ -108,6 +108,7 @@ Napi::Value ClassWrapper::Train(const Napi::CallbackInfo& info) {
     double mutationRange = (double)info[0].As<Napi::Number>();
     int numberOfGenerations = (int)info[1].As<Napi::Number>();
     int instancesPerGeneration = (int)info[2].As<Napi::Number>();
+
     int id = this->modelTrainer_->train(mutationRange, numberOfGenerations, instancesPerGeneration);
 
     std::vector<std::vector<std::vector<double>>> model;
@@ -128,7 +129,7 @@ Napi::Value ClassWrapper::Train(const Napi::CallbackInfo& info) {
         napi_set_element(env, nn, i, nn_nodes);
     }
 
-    return Napi::Value::Value(env, nn);
+    return Napi::Value(env, nn);
 }
 
 /*

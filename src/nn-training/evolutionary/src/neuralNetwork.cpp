@@ -1,4 +1,6 @@
 #include "neuralNetwork.h"
+#include <stdlib.h>
+#include <iostream>
 
 NeuralNetwork::NeuralNetwork() {
     NN = std::vector<std::vector<std::vector<double>>>();
@@ -12,20 +14,22 @@ std::vector<double> NeuralNetwork::matrixMultiplication(
     std::vector<double>& a,
     std::vector<std::vector<double>> b
 ) {
+	std::cout << "start" << a.size() << " " << b.size() << " "<<b[0].size() << std::endl;
     std::vector<double> res(b[0].size(), 0);
     for (int i = 0; i < res.size(); i++)
         for (int j = 0; j < b.size(); j++)
             res[i] += a[j] * b[j][i];
+	std::cout << "hello" << std::endl;
     return res;
 }
 
 void NeuralNetwork::predict(std::vector<double>& input, std::vector<double>& output) {
 	std::vector<double> current = input;
-	for (int layer = 0; layer <= NN.size(); layer++) {
+	for (int layer = 0; layer < NN.size(); layer++) {
 		for (int i = 0; i < current.size(); i++) {
 			current[i] = activate(current[i]);
 		}
-		if (layer != NN.size())
+		if (layer != NN.size() - 1)
             current = matrixMultiplication(current, NN[layer]);
 	}
 	output = current;

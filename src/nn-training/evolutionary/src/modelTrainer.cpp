@@ -1,4 +1,6 @@
 #include "modelTrainer.h"
+#include <stdlib.h>
+#include <iostream>
 
 ModelTrainer::ModelTrainer(std::vector<int>& model, std::vector<std::vector<double>>& input, std::vector<std::vector<double>>& output) {
     training_data_input = input;
@@ -40,6 +42,7 @@ int ModelTrainer::getBestInstanceFromGeneration() {
     int bestPerformance = -1;
     for (int i = 0; i < neuralNetworks.size(); i++) {
         int performance = evaluateInstance(i);
+        std::cout << performance << std::endl;
         if (performance > bestPerformance) {
             best = i;
             bestPerformance = performance;
