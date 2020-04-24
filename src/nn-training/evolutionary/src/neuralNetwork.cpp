@@ -23,16 +23,12 @@ void NeuralNetwork::predict(std::vector<double>& input, std::vector<double>& out
 	std::vector<double> current = input;
 	for (int layer = 0; layer <= NN.size(); layer++) {
 		for (int i = 0; i < current.size(); i++) {
-			current[i] = activate(current[i]);
+			current[i] = identityActivate(current[i]);
 		}
 		if (layer != NN.size())
             current = matrixMultiplication(current, NN[layer]);
 	}
 	output = current;
-}
-
-double NeuralNetwork::activate(double a) {
-	return a;
 }
 
 void NeuralNetwork::modifyWeights(double mutationRange) {
