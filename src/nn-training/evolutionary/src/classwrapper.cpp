@@ -1,5 +1,6 @@
 #include "classwrapper.h"
 #include <iostream>
+#define print(val) std::cout << val << std::endl;
 
 Napi::FunctionReference ClassWrapper::constructor;
 
@@ -122,9 +123,9 @@ Napi::Value ClassWrapper::Train(const Napi::CallbackInfo& info) {
             napi_value nn_weights;
             napi_create_array(env, &nn_weights);
             for (int k = 0; k < model[i][j].size(); k++) {
-                napi_set_element(env, nn_weights, i, Napi::Number::New(env, model[i][j][k]));
+                napi_set_element(env, nn_weights, k, Napi::Number::New(env, model[i][j][k]));
             }
-            napi_set_element(env, nn_nodes, i, nn_weights);
+            napi_set_element(env, nn_nodes, j, nn_weights);
         }
         napi_set_element(env, nn, i, nn_nodes);
     }

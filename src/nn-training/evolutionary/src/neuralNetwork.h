@@ -13,13 +13,6 @@ public:
         std::vector<std::vector<double>> b
     );
     void predict(std::vector<double>& input, std::vector<double>& output);
-    double identityActivate(double a);
-    double ReLUActivate(double a);
-    double binaryStepActivate(double a);
-    double logisticActivate(double a);
-    double tanHActivate(double a);
-    double binaryStepActivate(double a);
-    double softsignActivate(double a);
     void modifyWeights(double mutationRange);
 private:
     std::vector<std::vector<std::vector<double>>> NN;
