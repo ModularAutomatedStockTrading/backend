@@ -3,8 +3,9 @@
 #include <iostream>
 #include "activationfunctions.cpp"
 
-NeuralNetwork::NeuralNetwork() {
+NeuralNetwork::NeuralNetwork(bool withBias) {
     NN = std::vector<std::vector<std::vector<double>>>();
+	this->withBias = withBias;
 }
 
 void NeuralNetwork::get_NN(std::vector<std::vector<std::vector<double>>>& NN) {
@@ -16,10 +17,12 @@ std::vector<double> NeuralNetwork::matrixMultiplication(
     std::vector<std::vector<double>> b
 ) {
     std::vector<double> res(b[0].size(), 0);
-    for (int i = 0; i < res.size(); i++)
-        for (int j = 0; j < b.size(); j++)
+    for (int i = 0; (unsigned)i < res.size(); i++) {
+        for (int j = 0; (unsigned)j < (withBias ? b.size() - 1 : b.size()); j++)
             res[i] += a[j] * b[j][i];
-    return res;
+		if (withBias) res[i] += b[b.size() - 1][i];
+	}
+	return res;
 }
 
 // a[nextLayerNode] = sum of values
@@ -27,23 +30,20 @@ std::vector<double> NeuralNetwork::matrixMultiplication(
 
 void NeuralNetwork::predict(std::vector<double>& input, std::vector<double>& output) {
 	std::vector<double> current = input;
-	for (int layer = 0; layer < NN.size(); layer++) {
-		for (int i = 0; i < current.size(); i++) {
-			current[i] = Activation::logisticActivate(current[i]);
+	for (int layer = 0; (unsigned)layer < NN.size() - 1; layer++) {
+		current = matrixMultiplication(current, NN[layer]);
+		for (int i = 0; (unsigned)i < current.size(); i++) {
+			if((unsigned) layer == NN.size() - 2) current[i] = Activation::SQNLActivate(current[i]);
+			else current[i] = Activation::logisticActivate(current[i]);
 		}
-		if (layer != NN.size() - 1)
-            current = matrixMultiplication(current, NN[layer]);
-	}
-	for(int i = 0; i < current.size(); i++){
-		current[i] = Activation::SQNLActivate(current[i]);
 	}
 	output = current;
 }
 
 void NeuralNetwork::modifyWeights(double mutationRange) {
-    for (int i = 0; i < NN.size(); i++) {
-        for (int j = 0; j < NN[i].size(); j++) {
-            for (int k = 0; k < NN[i][j].size(); k++) {
+    for (int i = 0; (unsigned)i < NN.size(); i++) {
+        for (int j = 0; (unsigned)j < NN[i].size(); j++) {
+            for (int k = 0; (unsigned)k < NN[i][j].size(); k++) {
                 NN[i][j][k] += (double)(rand() % (int)(mutationRange * 1000000 * 2)) / 1000000 - mutationRange;
             }
         }
@@ -52,7 +52,7 @@ void NeuralNetwork::modifyWeights(double mutationRange) {
 
 void NeuralNetwork::generateRandomInstance(std::vector<int>& modelTemplate) {
     NN.resize(modelTemplate.size());
-    for (int i = 0; i < modelTemplate.size() - 1; i++) {
+    for (int i = 0; (unsigned)i < modelTemplate.size() - 1; i++) {
         NN[i].resize(modelTemplate[i]);
         for (int j = 0; j < modelTemplate[i]; j++) {
             NN[i][j].resize(modelTemplate[i + 1]);

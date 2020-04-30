@@ -1,6 +1,5 @@
 #include "classwrapper.h"
 #include <iostream>
-#define print(val) std::cout << val << std::endl;
 
 Napi::FunctionReference ClassWrapper::constructor;
 
@@ -25,8 +24,8 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
 
     int length = info.Length();
 
-    if (length != 7) {
-        Napi::TypeError::New(env, "Expected 7 arguments").ThrowAsJavaScriptException();
+    if (length != 8) {
+        Napi::TypeError::New(env, "Expected 8 arguments").ThrowAsJavaScriptException();
     }
 
     Napi::Number arg1 = info[0].As<Napi::Number>();
@@ -36,14 +35,16 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
     Napi::Array arg5 = info[4].As<Napi::Array>();
     Napi::Number arg6 = info[5].As<Napi::Number>();
     Napi::Array arg7 = info[6].As<Napi::Array>();
+    Napi::Boolean arg8 = info[7].As<Napi::Boolean>();
 
     int layer_cnt = arg1.Int32Value();
     int data_point_cnt = arg3.Int32Value();
     int input_cnt = arg4.Int32Value();
     int output_cnt = arg6.Int32Value();
+    bool withBias = arg8.Value();
 
     std::vector<int> model(layer_cnt);
-    for(int i = 0; i < arg2.Length(); i++) {
+    for(int i = 0; (unsigned)i < arg2.Length(); i++) {
         Napi::Value value = arg2[i];
         if (value.IsNumber()) {
             model[i] = (int)value.As<Napi::Number>();
@@ -53,11 +54,11 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
     }
 
     std::vector<std::vector<double>> input(std::vector<std::vector<double>>(data_point_cnt, std::vector<double>(input_cnt)));
-    for(int i = 0; i < arg5.Length(); i++) {
+    for(int i = 0; (unsigned)i < arg5.Length(); i++) {
         Napi::Value assumed_input_array = arg5[i];
         if(assumed_input_array.IsArray()){
             Napi::Array input_array = assumed_input_array.As<Napi::Array>();
-            for(int j = 0; j < input_array.Length(); j++) {
+            for(int j = 0; (unsigned)j < input_array.Length(); j++) {
                 Napi::Value value = input_array[j];
                 if (value.IsNumber()) {
                     input[i][j] = (double)value.As<Napi::Number>();
@@ -68,11 +69,11 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
         }
     }
     std::vector<std::vector<double>> output(std::vector<std::vector<double>>(data_point_cnt, std::vector<double>(output_cnt)));
-    for(int i = 0; i < arg7.Length(); i++) {
+    for(int i = 0; (unsigned)i < arg7.Length(); i++) {
         Napi::Value assumed_output_array = arg7[i];
         if(assumed_output_array.IsArray()){
             Napi::Array output_array = assumed_output_array.As<Napi::Array>();
-            for(int j = 0; j < output_array.Length(); j++) {
+            for(int j = 0; (unsigned)j < output_array.Length(); j++) {
                 Napi::Value value = output_array[j];
                 if (value.IsNumber()) {
                     output[i][j] = (double)value.As<Napi::Number>();
@@ -83,7 +84,7 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
         }
     }
 
-    this->modelTrainer_ = new ModelTrainer(model, input, output);
+    this->modelTrainer_ = new ModelTrainer(model, input, output, withBias);
 }
 
 Napi::Value ClassWrapper::Train(const Napi::CallbackInfo& info) {
@@ -116,13 +117,13 @@ Napi::Value ClassWrapper::Train(const Napi::CallbackInfo& info) {
     this->modelTrainer_->get_model(id, model);
     napi_value nn;
     napi_create_array(env, &nn);
-    for (int i = 0; i < model.size(); i++) {
+    for (int i = 0; (unsigned)i < model.size(); i++) {
         napi_value nn_nodes;
         napi_create_array(env, &nn_nodes);
-        for (int j = 0; j < model[i].size(); j++) {
+        for (int j = 0; (unsigned)j < model[i].size(); j++) {
             napi_value nn_weights;
             napi_create_array(env, &nn_weights);
-            for (int k = 0; k < model[i][j].size(); k++) {
+            for (int k = 0; (unsigned)k < model[i][j].size(); k++) {
                 napi_set_element(env, nn_weights, k, Napi::Number::New(env, model[i][j][k]));
             }
             napi_set_element(env, nn_nodes, j, nn_weights);

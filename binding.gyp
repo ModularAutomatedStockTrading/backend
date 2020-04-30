@@ -2,7 +2,7 @@
     "targets": [{
         "target_name": "NN_engine",
         "cflags!": [ "-fno-exceptions" ],
-        "cflags_cc!": [ "-fno-exceptions" ],
+        "cflags_cc!": [ "-fno-exceptions"],
         "sources": [
             "src/nn-training/evolutionary/src/main.cpp",
             "src/nn-training/evolutionary/src/classwrapper.cpp",

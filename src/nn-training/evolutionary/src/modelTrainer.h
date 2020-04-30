@@ -8,7 +8,7 @@
 
 class ModelTrainer {
 public:
-    ModelTrainer(std::vector<int>& model, std::vector<std::vector<double>>& input, std::vector<std::vector<double>>& output);
+    ModelTrainer(std::vector<int>& model, std::vector<std::vector<double>>& input, std::vector<std::vector<double>>& output, bool withBias);
     void generateRandomGeneration();
     void generateMutatedGeneration(int id);
     void generateMutatedInstance(NeuralNetwork instance, int id);
@@ -22,6 +22,7 @@ private:
     std::vector<std::vector<double>> training_data_output;
     std::vector<NeuralNetwork> neuralNetworks;
     double mutationRange;
+    bool withBias;
     std::vector<int> modelTemplate;
 };
 

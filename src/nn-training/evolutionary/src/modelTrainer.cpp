@@ -3,14 +3,22 @@
 #include <iostream>
 #include <cfloat>
 
+#define DEBUG
+
 #define print(val) std::cout << val << std::endl;
 #define printNoEndl(val) std::cout << val;
 #define printVector(vec) for(auto el : vec) std::cout << el << " "; std::cout << std::endl; 
 
-ModelTrainer::ModelTrainer(std::vector<int>& model, std::vector<std::vector<double>>& input, std::vector<std::vector<double>>& output) {
+ModelTrainer::ModelTrainer(
+    std::vector<int>& model,
+    std::vector<std::vector<double>>& input,
+    std::vector<std::vector<double>>& output,
+    bool withBias
+) {
     training_data_input = input;
     training_data_output = output;
     modelTemplate = model;
+    this->withBias = withBias;
 }
 
 void ModelTrainer::generateRandomGeneration() {
@@ -19,13 +27,13 @@ void ModelTrainer::generateRandomGeneration() {
     Input   -> void
     Output  -> void
     */
-    for (int i = 0; i < neuralNetworks.size(); i++) {
+    for (int i = 0; (unsigned)i < neuralNetworks.size(); i++) {
         neuralNetworks[i].generateRandomInstance(modelTemplate);
     }
 }
 
 void ModelTrainer::generateMutatedGeneration(int id) {
-    for (int i = 0; i < neuralNetworks.size(); i++) {
+    for (int i = 0; (unsigned)i < neuralNetworks.size(); i++) {
         if(i != id){
             neuralNetworks[i] = neuralNetworks[id];
             neuralNetworks[i].modifyWeights(mutationRange);
@@ -49,15 +57,18 @@ void ModelTrainer::printModel(int id){
 
 double ModelTrainer::evaluateInstance(int id) {
     double sum = 0;
-    for (int i = 0; i < training_data_input.size(); i++) {
+    for (int i = 0; (unsigned)i < training_data_input.size(); i++) {
         std::vector<double> output;
-        printModel(id);
+        //printModel(id);
         neuralNetworks[id].predict(training_data_input[i], output);
+        #ifdef DEBUG
+        print(id);
         print("   input");
         printNoEndl("   "); printVector(training_data_input[i]);
         print("   output");
-        printNoEndl("   ");printVector(output);
-        for(int j = 0; j < output.size(); j++){
+        printNoEndl("   "); printVector(output);
+        #endif
+        for(int j = 0; (unsigned)j < output.size(); j++){
             sum += abs(output[j] - training_data_output[i][j]);
         }
     }
@@ -70,30 +81,43 @@ double ModelTrainer::evaluateInstance(int id) {
 int ModelTrainer::getBestInstanceFromGeneration() {
     int best = -1;
     double bestPerformance = DBL_MAX;
-    for (int i = 0; i < neuralNetworks.size(); i++) {
+    for (int i = 0; (unsigned)i < neuralNetworks.size(); i++) {
         double performance = evaluateInstance(i);
         if (performance < bestPerformance) {
             best = i;
             bestPerformance = performance;
         }
     }
+    #ifdef DEBUG
     std::cout << "best performance: " << bestPerformance << std::endl;
+    #endif
     return best;
 }
 
 int ModelTrainer::train(double mutationRange, int numberOfGenerations, int instancesPerGeneration) {
     srand(time(NULL)); // bad
     this->mutationRange = mutationRange;
-    neuralNetworks = std::vector<NeuralNetwork>(instancesPerGeneration, NeuralNetwork());
+    neuralNetworks = std::vector<NeuralNetwork>(instancesPerGeneration, NeuralNetwork(withBias));
     generateRandomGeneration();
-    int best;
+    int best = -1;
     for (int i = 0; i < numberOfGenerations; i++) {
+        #ifdef DEBUG
         std::cout << "generation: " << i + 1 << std::endl;
+        #endif
         best = getBestInstanceFromGeneration();
         generateMutatedGeneration(best);
     }
+    #ifdef DEBUG
     print("training ended");
-    printModel(best);
+    for(int i = 0; (unsigned)i < training_data_input.size(); i++){
+        std::vector<double> output;
+        neuralNetworks[best].predict(training_data_input[i], output);
+        print("   input");
+        printNoEndl("   "); printVector(training_data_input[i]);
+        print("   output");
+        printNoEndl("   "); printVector(output);
+    }
+    #endif
     return best;
 }
 
