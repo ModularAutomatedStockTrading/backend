@@ -5,7 +5,8 @@
         "cflags_cc!": [ "-fno-exceptions"],
         "sources": [
             "src/nn-training/evolutionary/src/main.cpp",
-            "src/nn-training/evolutionary/src/classwrapper.cpp",
+            "src/nn-training/evolutionary/src/classwrapper_ModelTrainer.cpp",
+            "src/nn-training/evolutionary/src/classwrapper_NeuralNetwork.cpp",
             "src/nn-training/evolutionary/src/modelTrainer.cpp",
             "src/nn-training/evolutionary/src/neuralNetwork.cpp",
         ],
