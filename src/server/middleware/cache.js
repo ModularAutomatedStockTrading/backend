@@ -5,7 +5,6 @@ const fetchExternal = (url, func) => {
         ExternalCacheResponse.findOne({
             url
         }).then(existingFetchData => {
-            //console.log(existingFetchData, url)
             if(existingFetchData){
                 resolve(
                     JSON.parse(

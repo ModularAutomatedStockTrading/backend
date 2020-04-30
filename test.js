@@ -1,6 +1,6 @@
 const NNEngine = require('./build/Release/NN_engine.node');
 //TRAINING
-/*try{
+try{
     const Trainer = new NNEngine.EvolutionaryModelTrainer(
         2, [2,1], 2, 1, [[0],[1]], 1, [[1], [0]], true
     );
@@ -8,13 +8,13 @@ const NNEngine = require('./build/Release/NN_engine.node');
     // -0.1 --- 0.1
 }catch(e){
     console.log(e)
-}*/
+}
 
 
 //EXECUTER
 const executer = new NNEngine.NNExecutor(
     2,
-    [[[1]],[[0]]],
+    [ [ [ -2.0707376809101548 ], [ 2.070736779207159 ] ], [] ],
     true
 )
 

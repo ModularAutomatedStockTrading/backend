@@ -7,16 +7,13 @@ const struct = new Schema({
     url : String,
     createdAt: {
         type: Date,
-        default: Date.now(),
-        index : {
-            expires : 60
-        }
+        default: Date.now
     }
 });
-/*struct.index({
+struct.index({
     createdAt : 1
-}, {expireAfterSeconds: 10})*/
-struct.index({ url: 1 });
+}, {expireAfterSeconds: 60})
+
 const model = mongoose.model('ExternalCacheResponse', struct);;
 model.on('index', function(error) {console.log("wdnjwndwjd")});
 
