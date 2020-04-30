@@ -5,7 +5,7 @@
   "repository": "git@github.com:ModularAutomatedStockTrading/backend.git",
   "author": "williamBMDK <williambillemeyling@gmail.com>",
   "license": "MIT",
-  "gypfile" : true,
+  "gypfile": true,
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -18,8 +18,8 @@
   "scripts": {
     "start-linux": "NODE_PATH=. nodemon src/server/app",
     "start-windows": "cmd.exe /C \"set NODE_PATH=.&& nodemon src/server/app\"",
-    "compile" : "node-gyp rebuild",
-    "runtest" : "node test.js"
+    "compile": "node-gyp rebuild",
+    "runtest": "node test.js"
   },
   "devDependencies": {
     "node-gyp": "^6.1.0"

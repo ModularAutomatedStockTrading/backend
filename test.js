@@ -13,7 +13,7 @@ const NNEngine = require('./build/Release/NN_engine.node');
 
 //EXECUTER
 const executer = new NNEngine.NNExecutor(
-    2,1,1,
+    2,
     [[[1]],[[0]]],
     true
 )

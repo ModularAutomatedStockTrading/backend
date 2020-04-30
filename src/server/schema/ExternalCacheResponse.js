@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+mongoose.set('useCreateIndex', true);
 const Schema = require('mongoose').Schema;
 
 const struct = new Schema({
@@ -13,11 +13,10 @@ const struct = new Schema({
         }
     }
 });
-
 /*struct.index({
     createdAt : 1
 }, {expireAfterSeconds: 10})*/
-
+struct.index({ url: 1 });
 const model = mongoose.model('ExternalCacheResponse', struct);;
 model.on('index', function(error) {console.log("wdnjwndwjd")});
 
