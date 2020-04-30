@@ -19,29 +19,26 @@ ClassWrapper_NeuralNetwork::ClassWrapper_NeuralNetwork(const Napi::CallbackInfo&
     Napi::HandleScope scope(env);
 
     int length = info.Length();
-    if (length != 5) {
-        Napi::TypeError::New(env, "Expected 5 arguments").ThrowAsJavaScriptException();
+    if (length != 3) {
+        Napi::TypeError::New(env, "Expected 3 arguments").ThrowAsJavaScriptException();
     }
 
-    int a = info[0].As<Napi::Number>().Int32Value();
-    int b = info[1].As<Napi::Number>().Int32Value();
-    int c = info[2].As<Napi::Number>().Int32Value();
-    Napi::Array model = info[3].As<Napi::Array>();
-    bool withBias = info[4].As<Napi::Boolean>().Value();
+    int layer_cnt = info[0].As<Napi::Number>().Int32Value();
+    Napi::Array model = info[1].As<Napi::Array>();
+    bool withBias = info[2].As<Napi::Boolean>().Value();
 
-    std::vector<std::vector<std::vector<double>>> NN(
-        a,
-        std::vector<std::vector<double>>(b, std::vector<double>(c))
-    );
-    for(int i = 0; i < a; i++) {
+    std::vector<std::vector<std::vector<double>>> NN(layer_cnt);
+    for(int i = 0; i < layer_cnt; i++) {
         Napi::Value maybe_model_i = model[i];
         if(maybe_model_i.IsArray()){
             Napi::Array model_i = maybe_model_i.As<Napi::Array>();
-            for(int j = 0; j < b; j++) {
+            NN[i].resize(model_i.Length());
+            for(int j = 0; (unsigned)j < NN[i].size(); j++) {
                 Napi::Value maybe_model_i_j = model_i[j];
                 if(maybe_model_i_j.IsArray()){
                     Napi::Array model_i_j = maybe_model_i_j.As<Napi::Array>();
-                    for(int k = 0; k < c; k++) {
+                    NN[i][j].resize(model_i_j.Length());
+                    for(int k = 0; (unsigned)k < NN[i][j].size(); k++) {
                         Napi::Value value = model_i_j[k];
                         if (value.IsNumber()) {
                             NN[i][j][k] = (double)value.As<Napi::Number>();
