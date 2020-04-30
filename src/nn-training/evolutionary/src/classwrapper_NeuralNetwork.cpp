@@ -27,7 +27,7 @@ ClassWrapper_NeuralNetwork::ClassWrapper_NeuralNetwork(const Napi::CallbackInfo&
 
     int a = info[0].As<Napi::Number>().Int32Value();
     int b = info[1].As<Napi::Number>().Int32Value();
-    int b = info[2].As<Napi::Number>().Int32Value();
+    int c = info[2].As<Napi::Number>().Int32Value();
     Napi::Array model = info[3].As<Napi::Array>();
     bool withBias = info[4].As<Napi::Boolean>().Value();
 
@@ -57,7 +57,7 @@ ClassWrapper_NeuralNetwork::ClassWrapper_NeuralNetwork(const Napi::CallbackInfo&
     }
 
     this->neuralNetwork_ = new NeuralNetwork(withBias);
-    this->neuralNetwork_.set_NN(NN);
+    this->neuralNetwork_->set_NN(NN);
 }
 
 Napi::Value ClassWrapper_NeuralNetwork::Predict(const Napi::CallbackInfo& info) {
@@ -73,25 +73,24 @@ Napi::Value ClassWrapper_NeuralNetwork::Predict(const Napi::CallbackInfo& info) 
     int output_size = info[1].As<Napi::Number>().Int32Value();
     Napi::Array input = info[2].As<Napi::Array>();
 
-    std::vector<int> a(input_size);
+    std::vector<double> a(input_size);
     std::vector<double> b(output_size);
 
     for(int i = 0; i < input_size; i++) {
         Napi::Value value = input[i];
         if (value.IsNumber()) {
-            a[i] = (int)value.As<Napi::Number>();
+            a[i] = (double)value.As<Napi::Number>();
         } else {
             Napi::TypeError::New(env, "Expected an array of numbers").ThrowAsJavaScriptException();
         }
     }
 
-    this.neuralNetwork_->predict(a, b);
+    this->neuralNetwork_->predict(a, b);
 
     napi_value output;
     napi_create_array(env, &output);
     for (int i = 0; (unsigned)i < b.size(); i++) {
-        napi_value value;
-        napi_set_element(env, output, i, value);
+        napi_set_element(env, output, i, Napi::Number::New(env, b[i]));
     }
 
     return Napi::Value(env, output);
