@@ -7,6 +7,7 @@ class NeuralNetwork {
 public:
     NeuralNetwork(bool withBias);
     void get_NN(std::vector<std::vector<std::vector<double>>>& NN);
+    void set_NN(std::vector<std::vector<std::vector<double>>>& NN);
     void generateRandomInstance(std::vector<int>& modelTemplate);
     std::vector<double> matrixMultiplication(
         std::vector<double>& a,

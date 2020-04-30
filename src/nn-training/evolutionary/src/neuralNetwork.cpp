@@ -12,6 +12,10 @@ void NeuralNetwork::get_NN(std::vector<std::vector<std::vector<double>>>& NN) {
     NN = this->NN;
 }
 
+void NeuralNetwork::set_NN(std::vector<std::vector<std::vector<double>>>& NN) {
+    this->NN = NN;
+}
+
 std::vector<double> NeuralNetwork::matrixMultiplication(
     std::vector<double>& a,
     std::vector<std::vector<double>> b
