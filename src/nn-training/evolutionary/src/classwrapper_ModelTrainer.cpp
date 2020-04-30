@@ -3,7 +3,7 @@
 
 Napi::FunctionReference ClassWrapper_ModelTrainer::constructor;
 
-Napi::Object ClassWrapper_ModelTrainer::Init(Napi::Env env, Napi::Object exports) {
+void ClassWrapper_ModelTrainer::Init(Napi::Env env, Napi::Object& exports) {
     Napi::HandleScope scope(env);
 
     Napi::Function func = DefineClass(env, "EvolutionaryModelTrainer", {
@@ -12,8 +12,6 @@ Napi::Object ClassWrapper_ModelTrainer::Init(Napi::Env env, Napi::Object exports
     constructor = Napi::Persistent(func);
     constructor.SuppressDestruct();
     exports.Set("EvolutionaryModelTrainer", func);
-
-    return exports;
 }
 
 ClassWrapper_ModelTrainer::ClassWrapper_ModelTrainer(const Napi::CallbackInfo& info) : Napi::ObjectWrap<ClassWrapper_ModelTrainer>(info)  {

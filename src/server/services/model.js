@@ -30,7 +30,7 @@ evolutionaryTrainer.train(
     ],
 ]*/
 
-const NNengine = {};//require('build/Release/NN_engine.node');
+const NNengine = require('build/Release/NN_engine.node');
 
 const {getInputData} = require("src/server/services/inputs")
 const {getOutputData} = require("src/server/services/outputs")

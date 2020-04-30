@@ -6,7 +6,7 @@
 
 class ClassWrapper_ModelTrainer : public Napi::ObjectWrap<ClassWrapper_ModelTrainer> {
 public:
-    static Napi::Object Init(Napi::Env env, Napi::Object exports); //Init function for setting the export key to JS
+    static void Init(Napi::Env env, Napi::Object& exports); //Init function for setting the export key to JS
     ClassWrapper_ModelTrainer(const Napi::CallbackInfo& info); //Constructor to initialise
 
 private:

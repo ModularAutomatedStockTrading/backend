@@ -3,17 +3,15 @@
 
 Napi::FunctionReference ClassWrapper_NeuralNetwork::constructor;
 
-Napi::Object ClassWrapper_NeuralNetwork::Init(Napi::Env env, Napi::Object exports) {
+void ClassWrapper_NeuralNetwork::Init(Napi::Env env, Napi::Object& exports) {
     Napi::HandleScope scope(env);
 
-    Napi::Function func = DefineClass(env, "NN_Executor", {
+    Napi::Function func = DefineClass(env, "NNExecutor", {
         InstanceMethod("predict", &ClassWrapper_NeuralNetwork::Predict)
     });
     constructor = Napi::Persistent(func);
     constructor.SuppressDestruct();
-    exports.Set("NN_Executor", func);
-
-    return exports;
+    exports.Set("NNExecutor", func);
 }
 
 ClassWrapper_NeuralNetwork::ClassWrapper_NeuralNetwork(const Napi::CallbackInfo& info) : Napi::ObjectWrap<ClassWrapper_NeuralNetwork>(info)  {
@@ -65,8 +63,8 @@ Napi::Value ClassWrapper_NeuralNetwork::Predict(const Napi::CallbackInfo& info) 
     Napi::HandleScope scope(env);
 
     int length = info.Length();
-    if (length != 1) {
-        Napi::TypeError::New(env, "Expected 1 arguments").ThrowAsJavaScriptException();
+    if (length != 3) {
+        Napi::TypeError::New(env, "Expected 3 arguments").ThrowAsJavaScriptException();
     }
 
     int input_size = info[0].As<Napi::Number>().Int32Value();
