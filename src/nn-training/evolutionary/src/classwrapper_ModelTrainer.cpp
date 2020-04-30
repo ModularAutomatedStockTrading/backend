@@ -1,24 +1,22 @@
-#include "classwrapper.h"
+#include "classwrapper_ModelTrainer.h"
 #include <iostream>
 
-Napi::FunctionReference ClassWrapper::constructor;
+Napi::FunctionReference ClassWrapper_ModelTrainer::constructor;
 
-Napi::Object ClassWrapper::Init(Napi::Env env, Napi::Object exports) {
+Napi::Object ClassWrapper_ModelTrainer::Init(Napi::Env env, Napi::Object exports) {
     Napi::HandleScope scope(env);
 
     Napi::Function func = DefineClass(env, "EvolutionaryModelTrainer", {
-        /*InstanceMethod("add", &ClassWrapper::Add),*/
-        InstanceMethod("train", &ClassWrapper::Train)/*,*/
+        InstanceMethod("train", &ClassWrapper_ModelTrainer::Train)
     });
-
     constructor = Napi::Persistent(func);
     constructor.SuppressDestruct();
-
     exports.Set("EvolutionaryModelTrainer", func);
+
     return exports;
 }
 
-ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<ClassWrapper>(info)  {
+ClassWrapper_ModelTrainer::ClassWrapper_ModelTrainer(const Napi::CallbackInfo& info) : Napi::ObjectWrap<ClassWrapper_ModelTrainer>(info)  {
     Napi::Env env = info.Env();
     Napi::HandleScope scope(env);
 
@@ -87,7 +85,7 @@ ClassWrapper::ClassWrapper(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Cl
     this->modelTrainer_ = new ModelTrainer(model, input, output, withBias);
 }
 
-Napi::Value ClassWrapper::Train(const Napi::CallbackInfo& info) {
+Napi::Value ClassWrapper_ModelTrainer::Train(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     Napi::HandleScope scope(env);
 
@@ -133,20 +131,3 @@ Napi::Value ClassWrapper::Train(const Napi::CallbackInfo& info) {
 
     return Napi::Value(env, nn);
 }
-
-/*
-Napi::Value ClassWrapper::Add(const Napi::CallbackInfo& info) {
-    Napi::Env env = info.Env();
-    Napi::HandleScope scope(env);
-
-    if (  info.Length() != 1 || !info[0].IsNumber()) {
-        Napi::TypeError::New(env, "Number expected").ThrowAsJavaScriptException();
-    }
-
-    Napi::Number toAdd = info[0].As<Napi::Number>();
-    double answer = this->actualClass_->add(toAdd.DoubleValue());
-
-    //return Napi::Number::New(env, num);
-    return Napi::Number::New(info.Env(), answer);
-}
-*/
