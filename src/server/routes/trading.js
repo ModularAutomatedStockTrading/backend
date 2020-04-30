@@ -1,7 +1,7 @@
 const express = require("express");
 const {getInputs} = require("src/server/services/inputs");
 const {getOutputs} = require("src/server/services/outputs");
-const fetchFromAPI = require("src/server/utility/alphavantageAPI")
+const {fetchFromAPI} = require("src/server/utility/alphavantageAPI")
 const router = express.Router();
 
 router.use("/trade", async (req, res) => {

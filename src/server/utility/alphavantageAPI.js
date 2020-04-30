@@ -9,13 +9,24 @@ const default_API_config = {
     apikey : API_KEY
 }
 
-const fetchFromAPI = config => {
+const getURL = config => {
     const queryParams = buildQueryString({
         ...default_API_config,
         ...config
     });
     const url = `${API_URL}?${queryParams}`;
-    return Cache.fetchExternal(url, () => fetchJSON(url));
+    return url;
 }
 
-module.exports = fetchFromAPI;
+const fetchFromAPI = input => {
+    const url = typeof input == "object" ? getURL(input) : input;
+    return Cache.fetchExternal(
+        url,
+        () => fetchJSON(url)
+    );
+}
+
+module.exports = {
+    fetchFromAPI,
+    getURL
+};

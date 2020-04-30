@@ -32,8 +32,9 @@ evolutionaryTrainer.train(
 
 const NNengine = require('build/Release/NN_engine.node');
 
-const {getInputData} = require("src/server/services/inputs")
-const {getOutputData} = require("src/server/services/outputs")
+const {getInputData, getAPIurlInput} = require("src/server/services/inputs")
+const {getOutputData, getAPIurlOutput} = require("src/server/services/outputs")
+const {fetchFromAPI} = require("src/server/utility/alphavantageAPI")
 const minMaxNormalize = require("src/server/utility/normalization").minMax;
 
 module.exports = class ModelService{
@@ -41,52 +42,95 @@ module.exports = class ModelService{
         this.model = model;
         this.inputs = []
         this.outputs = []
-        console.log(model)
+        console.log("created model service")
     }
 
     fetchTrainingData(){
+        console.log("fetching data")
         return new Promise((resolve, reject) => {
-            const promises = []
+            const fetchingPromises = []
+            const dataPromises = []
+            const urls = {};
             for(const input of this.model.inputs){
-                promises.push(getInputData(input));
+                const url = getAPIurlInput(input);
+                if(urls[url]){
+                    urls[url].push({
+                        type : "input",
+                        input
+                    });
+                }else{
+                    urls[url] = [{
+                        type : "input",
+                        input
+                    }];
+                }
             }
             for(const output of this.model.outputs){
-                promises.push(getOutputData(output));
+                const url = getAPIurlOutput(output);
+                if(urls[url]){
+                    urls[url].push({
+                        type : "output",
+                        output
+                    });
+                }else{
+                    urls[url] = [{
+                        type : "output",
+                        output
+                    }];
+                }
             }
-            Promise.all(promises).then(results => {
-                for(const time in results[0].datapoints){
-                    let b = true;
-                    for(let i = 0; i < results.length; i++){
-                        if(results[i].datapoints[time] == undefined){
-                            b = false;
-                            break;
-                        }
-                    }
-                    if(b){
-                        const inputVector = []
-                        const outputVector = []
-                        for(let i = 0; i < results.length; i++){
-                            if(results[i].type == 'input'){
-                                inputVector.push(results[i].datapoints[time])
+            for(const url in urls){
+                fetchingPromises.push(new Promise((resolveRequest, rejectRequest) => {
+                    fetchFromAPI(url).then(() => {
+                        for(const query of urls[url]){
+                            if(query.type == "input"){
+                                dataPromises.push(getInputData(query.input));
                             }else{
-                                outputVector.push(results[i].datapoints[time])
+                                dataPromises.push(getOutputData(query.output));
                             }
                         }
-                        this.inputs.push(inputVector)
-                        this.outputs.push(outputVector)
+                        resolveRequest();
+                    })
+                }))
+            }
+            Promise.all(fetchingPromises).then(() => {
+                Promise.all(dataPromises).then(results => {
+                    for(const time in results[0].datapoints){
+                        let b = true;
+                        for(let i = 0; i < results.length; i++){
+                            if(results[i].datapoints[time] == undefined){
+                                b = false;
+                                break;
+                            }
+                        }
+                        if(b){
+                            const inputVector = []
+                            const outputVector = []
+                            for(let i = 0; i < results.length; i++){
+                                if(results[i].type == 'input'){
+                                    inputVector.push(results[i].datapoints[time])
+                                }else{
+                                    outputVector.push(results[i].datapoints[time])
+                                }
+                            }
+                            this.inputs.push(inputVector)
+                            this.outputs.push(outputVector)
+                        }
                     }
-                }
-                resolve()
+                    resolve()
+                })
             })
         })
     }
 
     train(){
         const inputs = minMaxNormalize(this.inputs);
-        console.log(inputs);
-        console.log(this.outputs);
+        //console.log(inputs);
+        //console.log(this.outputs);
         return new Promise((resolve, reject) => {
             if(this.inputs.length < 10) resolve(null);
+            console.log("training")
+            console.log("   Amount of datapoints:", inputs.length)
             const modelArray = 
                 [this.model.amountOfInputNodes + 1]
                 .concat(this.model.amountOfHiddenLayerNodes.map(el => el + 1))

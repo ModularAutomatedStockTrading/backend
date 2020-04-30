@@ -1,9 +1,24 @@
-const fetchFromAPI = require("src/server/utility/alphavantageAPI")
+const {fetchFromAPI, getURL} = require("src/server/utility/alphavantageAPI")
 
 const companies = ["MSFT", "SNE", "XIACF", "IBM"]
 const companyStockIndicators = ["open", "high", "low", "close", "volume"]
 const indicatorActions = ["UP", "DOWN"];
 const amounts = [0,1,2,3,4,5,10,15,20,30,50,100,250,500,1000];
+
+module.exports.getAPIurlOutput = output => {
+    const type = output.type.split("/")
+    const value = output.value.split("/")
+    if(value[0] == 'stock'){
+        const company = value[1];
+        return getURL({
+            function : "TIME_SERIES_INTRADAY",
+            symbol : company,
+            interval : "1min",
+            outputsize : "full"
+        })
+    }
+    return "";   
+}
 
 module.exports.getOutputs = () => {
     const res = []
@@ -38,7 +53,7 @@ module.exports.getOutputData = output => new Promise((resolve, reject) => {
         const action = value[3];
         const amount = value[4];
         //console.log(output, company, indicator, action, amount)
-        fetchFromAPI({
+        setTimeout(() => fetchFromAPI({
             function : "TIME_SERIES_INTRADAY",
             symbol : company,
             interval : "1min",
@@ -73,7 +88,7 @@ module.exports.getOutputData = output => new Promise((resolve, reject) => {
                 datapoints : res,
                 type : "output"
             })
-        })
+        }),1000)
     }
 })
 
