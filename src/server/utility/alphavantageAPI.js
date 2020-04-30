@@ -1,6 +1,9 @@
 const {buildQueryString, fetchJSON} = require("./request")
+const Cache = require("src/server/middleware/cache")
+
 const API_KEY = process.env.API_KEY;
 const API_URL = "https://www.alphavantage.co/query";
+
 const default_API_config = {
     datatype : "json",
     apikey : API_KEY
@@ -11,8 +14,8 @@ const fetchFromAPI = config => {
         ...default_API_config,
         ...config
     });
-    //console.log(`${API_URL}?${queryParams}`)
-    return fetchJSON(`${API_URL}?${queryParams}`);
+    const url = `${API_URL}?${queryParams}`;
+    return Cache.fetchExternal(url, () => fetchJSON(url));
 }
 
 module.exports = fetchFromAPI;
