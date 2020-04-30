@@ -18,7 +18,7 @@ const struct = new Schema({
     createdAt : 1
 }, {expireAfterSeconds: 10})*/
 
+const model = mongoose.model('ExternalCacheResponse', struct);;
+model.on('index', function(error) {console.log("wdnjwndwjd")});
 
-module.exports.ExternalCacheResponse = mongoose.model('ExternalCacheResponse', struct);
-
-module.exports.ExternalCacheResponse.on('index', function(error) {console.log("wdnjwndwjd")});
+module.exports.ExternalCacheResponse = model;
