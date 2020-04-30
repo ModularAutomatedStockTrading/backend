@@ -59,7 +59,6 @@ double ModelTrainer::evaluateInstance(int id) {
     double sum = 0;
     for (int i = 0; (unsigned)i < training_data_input.size(); i++) {
         std::vector<double> output;
-        //printModel(id);
         neuralNetworks[id].predict(training_data_input[i], output);
         #ifdef DEBUG
         print(id);
