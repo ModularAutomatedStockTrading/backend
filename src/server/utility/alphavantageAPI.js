@@ -11,6 +11,7 @@ const fetchFromAPI = config => {
         ...default_API_config,
         ...config
     });
+    //console.log(`${API_URL}?${queryParams}`)
     return fetchJSON(`${API_URL}?${queryParams}`);
 }
 

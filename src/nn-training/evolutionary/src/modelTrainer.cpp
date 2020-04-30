@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cfloat>
 
-#define DEBUG
+//#define DEBUG
 
 #define print(val) std::cout << val << std::endl;
 #define printNoEndl(val) std::cout << val;
@@ -88,7 +88,7 @@ int ModelTrainer::getBestInstanceFromGeneration() {
             bestPerformance = performance;
         }
     }
-    #ifdef DEBUG
+    #ifndef DEBUG
     std::cout << "best performance: " << bestPerformance << std::endl;
     #endif
     return best;
@@ -101,7 +101,7 @@ int ModelTrainer::train(double mutationRange, int numberOfGenerations, int insta
     generateRandomGeneration();
     int best = -1;
     for (int i = 0; i < numberOfGenerations; i++) {
-        #ifdef DEBUG
+        #ifndef DEBUG
         std::cout << "generation: " << i + 1 << std::endl;
         #endif
         best = getBestInstanceFromGeneration();

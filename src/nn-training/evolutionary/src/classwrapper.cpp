@@ -8,7 +8,7 @@ Napi::Object ClassWrapper::Init(Napi::Env env, Napi::Object exports) {
 
     Napi::Function func = DefineClass(env, "EvolutionaryModelTrainer", {
         /*InstanceMethod("add", &ClassWrapper::Add),*/
-        InstanceMethod("Train", &ClassWrapper::Train)/*,*/
+        InstanceMethod("train", &ClassWrapper::Train)/*,*/
     });
 
     constructor = Napi::Persistent(func);

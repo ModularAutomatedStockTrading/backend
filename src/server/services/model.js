@@ -1,4 +1,4 @@
-//const NNengine = require('build/Release/NN-engine');
+//const NNengine = require('build/Release/NN_engine.node');
 
 /*const evolutionaryTrainer = new NNtrainer.EvolutionaryTrainer(
     layercount : int,
@@ -30,8 +30,11 @@ evolutionaryTrainer.train(
     ],
 ]*/
 
+const NNengine = require('build/Release/NN_engine.node');
+
 const {getInputData} = require("src/server/services/inputs")
 const {getOutputData} = require("src/server/services/outputs")
+const minMaxNormalize = require("src/server/utility/normalization").minMax;
 
 module.exports = class ModelService{
     constructor(model){
@@ -79,29 +82,30 @@ module.exports = class ModelService{
     }
 
     train(){
-        console.log(this.inputs)
-        console.log(this.outputs)
+        const inputs = minMaxNormalize(this.inputs);
+        console.log(inputs);
+        console.log(this.outputs);
         return new Promise((resolve, reject) => {
             if(this.inputs.length < 10) resolve(null);
             const modelArray = 
-                [this.model.amountOfInputsNodes]
-                .concat(this.model.amountOfHiddenLayerNodes)
+                [this.model.amountOfInputNodes + 1]
+                .concat(this.model.amountOfHiddenLayerNodes.map(el => el + 1))
                 .concat([this.model.amountOfOutputNodes])
             ;
-            /*
-            this.evolutionaryTrainer = new NNengine.EvolutionaryTrainer(
+            this.evolutionaryTrainer = new NNengine.EvolutionaryModelTrainer(
                 this.model.amountOfHiddenLayers + 2,
                 modelArray,
-                this.inputs.length,
-                this.inputs[0].length,
-                this.inputs,
+                inputs.length,
+                inputs[0].length,
+                inputs,
                 this.outputs[0].length,
-                this.outputs
+                this.outputs,
+                true
             );
-            const result = this.evolutionaryTrainer.train(0.95, 1.05, 100, 100)
+            const result = this.evolutionaryTrainer.train(0.1, 100, 100)
             resolve(result)
-            */
-            resolve("result")
+            console.log(result)
+            //resolve("result")
         })
     }
 }

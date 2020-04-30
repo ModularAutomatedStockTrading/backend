@@ -42,7 +42,7 @@ router.post("/:id/train", async (req, res) => {
     
     const modelService = new ModelService(model);
     modelService.fetchTrainingData().then(() => {
-        modelService.train().then(() => {
+        modelService.train().then((result) => {
             Model.findById(req.params.id).then(model => {
                 model.hasTrained = true;
                 model.isTraining = false;
