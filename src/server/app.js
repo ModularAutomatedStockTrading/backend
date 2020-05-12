@@ -21,12 +21,14 @@ app.use("/modelTemplates", modelTemplateRoutes);
 app.use("/trading-api", tradingRoutes);
 app.use("/ates", ATERoutes);
 
+console.log("connecting to database...")
+
 mongoose.connect(`mongodb://${process.env.MONGODBURL}:27017/mtd`,
-{
-    useNewUrlParser: true, useUnifiedTopology: true,
-    //user : String(process.env.DB_USER),
-    //pass : String(process.env.DB_PASSWORD)
-});
+    {
+        useNewUrlParser: true, useUnifiedTopology: true,
+    }
+);
+
 mongoose.set('useFindAndModify', false);
 
 app.listen(process.env.PORT, () => {

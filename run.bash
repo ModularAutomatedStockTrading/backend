@@ -1,2 +1,2 @@
-sleep 10s
+sleep 20s
 npm run start-linux
