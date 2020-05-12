@@ -8,24 +8,28 @@ const cors = require('cors')
 
 // for debugging
 let consoleCount = 0;
-console.start = (s) => {
+console.start = s => {
     consoleCount++;
-    console.info(s);
+    console.info("      ".repeat(consoleCount - 1), s);
 }
 console.stop = () => {
     consoleCount--;
 }
-console.log = (s) => {
+console.log = (...args) => {
     if(consoleCount == 0) console.error("CONSOLE LOG NOT ALLOWED")
-    else console.info("      ".repeat(consoleCount) + s)
+    else console.info("   ".repeat(consoleCount), ...args)
 }
+
+setInterval(() => {
+    console.info("keeping stdout alive...")
+}, 20000)
 
 console.start("SETUP")
 
 const modelRoutes = require("./routes/models");
 const modelTemplateRoutes = require("./routes/modelTemplates");
 const tradingRoutes = require("./routes/trading");
-const ATERoutes = require("./routes/ATEs")
+const ATERoutes = require("./routes/ATEs") 
 
 const app = express();
 

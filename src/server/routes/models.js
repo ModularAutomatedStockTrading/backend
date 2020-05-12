@@ -33,8 +33,11 @@ router.delete("/:id", async (req, res) => {
 });
 
 router.post("/:id/train", async (req, res) => {
-    const model = await Model.findById(req.params.id);
     
+    console.start("TRAINING ROUTE")
+
+    const model = await Model.findById(req.params.id);
+     
     model.isTraining = true;
     model.save();
 
@@ -48,17 +51,13 @@ router.post("/:id/train", async (req, res) => {
                 model.isTraining = false;
                 model.weights = result.weights;
                 model.statistics = result.statistics;
+                console.log("weights: ", model.weights)
+                console.log("statistics: ", model.statistics)
                 model.save();
+                console.stop();
             });
         })
     });
-    /*modelService.train().then(result => {   
-        Model.findById(req.params.id).then(model => {
-            model.hasTrained = true;
-            model.isTraining = false;
-            model.save();
-        });
-    });*/
 })
 
 module.exports = router;

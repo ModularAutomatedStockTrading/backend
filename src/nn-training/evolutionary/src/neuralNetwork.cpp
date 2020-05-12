@@ -42,15 +42,18 @@ void NeuralNetwork::predict(std::vector<double>& input, std::vector<double>& out
 			else current[i] = Activation::activate(current[i], "logistic");
 		}
 	}
-	printVector(current);
+	// printVector(current);
 	output = current;
 }
 
 void NeuralNetwork::modifyWeights(double mutationRange) {
-    for (int i = 0; (unsigned)i < NN.size(); i++) {
+    double range = (double)(rand() % (int)(mutationRange * 1000000)) / 1000000; 0 - 0.5;
+	for (int i = 0; (unsigned)i < NN.size(); i++) {
         for (int j = 0; (unsigned)j < NN[i].size(); j++) {
             for (int k = 0; (unsigned)k < NN[i][j].size(); k++) {
-                NN[i][j][k] += (double)(rand() % (int)(mutationRange * 1000000 * 2)) / 1000000 - mutationRange;
+				double change = (double)(rand() % (int)(range * 1000000 * 2)) / 1000000 - range;
+				//std::cout << change << std::endl;
+                NN[i][j][k] += change;
             }
         }
     }
@@ -63,7 +66,7 @@ void NeuralNetwork::generateRandomInstance(std::vector<int>& modelTemplate) {
         for (int j = 0; j < modelTemplate[i]; j++) {
             NN[i][j].resize(modelTemplate[i + 1]);
             for (int k = 0; k < modelTemplate[i + 1]; k++) {
-                NN[i][j][k] = (double)rand() / RAND_MAX;
+                NN[i][j][k] = (double)rand() / RAND_MAX - 0.5;
             }
         }
     }

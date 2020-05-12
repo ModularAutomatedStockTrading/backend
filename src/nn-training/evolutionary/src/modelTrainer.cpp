@@ -56,6 +56,23 @@ void ModelTrainer::printModel(int id){
     std::cout << "   end model " << id << std::endl; 
 }
 
+double ModelTrainer::evaluateInstanceSingle(int id, int inputIndex) {
+    double sum = 0;
+    std::vector<double> output;
+    neuralNetworks[id].predict(training_data_input[inputIndex], output);
+    #ifdef DEBUG
+        print(id);
+        print("   input");
+        printNoEndl("   "); printVector(training_data_input[i]);
+        print("   output");
+        printNoEndl("   "); printVector(output);
+    #endif
+    for(int j = 0; (unsigned)j < output.size(); j++){
+        sum += std::fabs(output[j] - training_data_output[inputIndex][j]);
+    }
+    return sum / training_data_input.size(); 
+}
+
 double ModelTrainer::evaluateInstance(int id) {
     double sum = 0;
     for (int i = 0; (unsigned)i < training_data_input.size(); i++) {
@@ -72,11 +89,27 @@ double ModelTrainer::evaluateInstance(int id) {
             sum += std::fabs(output[j] - training_data_output[i][j]);
         }
     }
-    return sum / training_data_input.size();
+    return sum / training_data_input.size(); 
 }
 
 //[[1,1],[0,1], [1,0]]
 //[[0.5684, 0.866],[0.5684, 0.866],[0.5684, 0.866]]
+
+int ModelTrainer::getBestInstanceFromGenerationSingle(int inputIndex) {
+    int best = -1;
+    double bestPerformance = DBL_MAX;
+    for (int i = 0; (unsigned)i < neuralNetworks.size(); i++) {
+        double performance = evaluateInstanceSingle(i, inputIndex);
+        if (performance < bestPerformance) {
+            best = i;
+            bestPerformance = performance;
+        }
+    }
+    #ifndef DEBUG
+        std::cout << "best performance: " << bestPerformance << std::endl;
+    #endif
+    return best;
+}
 
 int ModelTrainer::getBestInstanceFromGeneration() {
     int best = -1;
@@ -100,11 +133,16 @@ int ModelTrainer::train(double mutationRange, int numberOfGenerations, int insta
     neuralNetworks = std::vector<NeuralNetwork>(instancesPerGeneration, NeuralNetwork(withBias));
     generateRandomGeneration();
     int best = -1;
-    for (int i = 0; i < numberOfGenerations; i++) {
+    /*for (int i = 0; i < numberOfGenerations; i++) {
         #ifndef DEBUG
             std::cout << "generation: " << i + 1 << std::endl;
         #endif
         best = getBestInstanceFromGeneration();
+        generateMutatedGeneration(best);
+    }*/
+    for(int i = 0; i < training_data_input.size(); i++){
+        std::cout << "generation: " << i + 1 << std::endl;
+        best = getBestInstanceFromGenerationSingle(i);
         generateMutatedGeneration(best);
     }
     #ifdef DEBUG

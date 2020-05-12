@@ -22,7 +22,10 @@ const fetchFromAPI = input => {
     const url = typeof input == "object" ? getURL(input) : input;
     return Cache.fetchExternal(
         url,
-        () => fetchJSON(url)
+        () => {
+            console.info("lambda", url)
+            return fetchJSON(url)
+        }
     );
 }
 

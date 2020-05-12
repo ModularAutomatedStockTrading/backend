@@ -168,7 +168,11 @@ module.exports = class ModelService{
                 falseNegatives[j] += outputVector[j] <= 0.5 && !isCorrect;
             }
         }
+        console.log(this.trainingInputs, this.trainingOutputs)
+        console.log(this.testInputs, this.testOutputs)
+        console.log(truePositives, trueNegatives, falsePositives, falseNegatives)
         this.statistics = {
+            ...this.statistics,
             differences : differences.map(difference => {
                 return difference / this.testOutputs.length
             }),
@@ -191,6 +195,8 @@ module.exports = class ModelService{
         
         const inputs = minMaxNormalize(this.inputs);
 
+        shuffleTwoArrays(inputs, this.outputs)
+
         this.trainingInputs = getSubarrayOfData(inputs, 0.8, true);
         this.trainingOutputs = getSubarrayOfData(this.outputs, 0.8, true);
         this.testInputs = getSubarrayOfData(inputs, 0.8, false);
@@ -202,7 +208,7 @@ module.exports = class ModelService{
         console.log(this.testOutputs);
 
         return new Promise((resolve, reject) => {
-            if(this.inputs.length < 10) resolve(null);
+            if(this.inputs.length < 10) resolve({error : "insufficiant training data"});
             console.log("training")
             console.log("Amount of datapoints:", inputs.length)
             const modelArray = 
@@ -210,6 +216,7 @@ module.exports = class ModelService{
                 .concat(this.model.amountOfHiddenLayerNodes.map(el => el + 1))
                 .concat([this.model.amountOfOutputNodes])
             ;
+            const startTrainingTime = new Date();
             this.evolutionaryTrainer = new NNengine.EvolutionaryModelTrainer(
                 this.model.amountOfHiddenLayers + 2,
                 modelArray,
@@ -218,16 +225,39 @@ module.exports = class ModelService{
                 this.trainingInputs,
                 this.trainingOutputs[0].length,
                 this.trainingOutputs,
-                true
-            );
-            this.weights = this.evolutionaryTrainer.train(0.5, 10, 10);
+                true 
+            ); 
+            this.weights = this.evolutionaryTrainer.train(0.5, 100, 10); 
+            const trainingTime = (new Date() - startTrainingTime) / 1000;
+            const startTestTime = new Date();
             this.test();
+            const testingTime = (new Date() - startTestTime) / 1000;
+            this.statistics = {
+                ...this.statistics,
+                testingTime,
+                trainingTime
+            }
             resolve({
                 weights : this.weights,
                 statistics : this.statistics
             });
             console.stop()
         })
+    }
+}
+
+const shuffleTwoArrays = (arr1, arr2) => {
+    for(const i in arr1){
+        const j = Math.floor(Math.random() * arr1.length);
+        
+        const t1 = arr1[i];
+        const t2 = arr2[i];
+        
+        arr1[i] = arr1[j];
+        arr1[j] = t1;
+
+        arr2[i] = arr2[j];
+        arr2[j] = t2;
     }
 }
 

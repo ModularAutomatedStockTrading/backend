@@ -18,12 +18,25 @@ module.exports.getInputs = () => {
             })
         }
     }
+    res.push({
+        type : "difference",
+        label : "difference",
+        value : "difference"
+    })
     return res;
 }
 
 module.exports.getAPIurlInput = input => {
     const type = input.type.split("/");
     const value = input.value.split("/");
+    if(input.type == "difference"){
+        return getURL({
+            function : "TIME_SERIES_INTRADAY",
+            symbol : "MSFT",
+            interval : "1min",
+            outputsize : "full"
+        })
+    }
     if(
         type.length == 2 &&
         type[0] == 'stock' &&
@@ -45,12 +58,32 @@ module.exports.getAPIurlInput = input => {
 module.exports.getInputData = input => new Promise((resolve, reject) => {
     const type = input.type.split("/");
     const value = input.value.split("/");
-    if(
+    if(input.type == "difference"){
+        console.log("difference")
+        fetchFromAPI({
+            function : "TIME_SERIES_INTRADAY",
+            symbol : "MSFT",
+            interval : "1min",
+            outputsize : "full"
+        }).then(response => {
+            const res = []
+            const indicatorKey1 = `${companyStockIndicators.indexOf("open")+1}. ${"open"}`
+            const indicatorKey2 = `${companyStockIndicators.indexOf("close")+1}. ${"close"}`
+            for(const time in response["Time Series (1min)"]){
+                res[new Date(time).getTime()] = Number(response["Time Series (1min)"][time][indicatorKey1]) - Number(response["Time Series (1min)"][time][indicatorKey2])
+            }
+            resolve({ 
+                datapoints : res,
+                type : "input"
+            })
+        })
+    }
+    else if(
         type.length == 2 &&
         type[0] == 'stock' &&
         companyStockIndicators.includes(type[1]) &&
         value.length == 3 &&
-        companies.includes(value[1])
+        companies.includes(value[1]) 
     ){
         const company = value[1];
         const indicator = value[2];

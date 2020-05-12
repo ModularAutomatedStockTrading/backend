@@ -10,7 +10,7 @@ const minMax = inputs => {
                 temp.push(-1);
             }
             return temp;
-        })())
+        })()) 
     }
     for(let i = 0; i < dimensions; i++){
         let mi = Number.POSITIVE_INFINITY;

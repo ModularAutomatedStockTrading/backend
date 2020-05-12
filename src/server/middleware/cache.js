@@ -2,6 +2,7 @@ const ExternalCacheResponse = require("src/server/schema/ExternalCacheResponse")
 
 const fetchExternal = (url, func) => {
     console.start("CACHELOG")
+    console.log(url)
     return new Promise((resolve, reject) => {
         ExternalCacheResponse.findOne({
             url
@@ -15,12 +16,13 @@ const fetchExternal = (url, func) => {
                 )
                 console.stop()
             }else if(existingFetchData){
-                ExternalCacheResponse.watch().on("change", query => {
+                /*const changeStream = ExternalCacheResponse.watch().on("change", query => {
                     if(
                         query.operationType == "update" &&
                         JSON.stringify(query.documentKey._id) == JSON.stringify(existingFetchData._id)
                     ){
                         console.log("cachelog: got existing fetch that was fetching")
+                        changeStream.close();
                         resolve(
                             JSON.parse(
                                 query.updateDescription.updatedFields.data
@@ -28,7 +30,18 @@ const fetchExternal = (url, func) => {
                         )
                         console.stop()
                     }
-                })
+                })*/
+                setTimeout(() => { // hacky
+                    ExternalCacheResponse.findOne({
+                        url
+                    }).then(existingFetchData => {
+                        resolve(
+                            JSON.parse(
+                                existingFetchData.data
+                            )
+                        )
+                    })
+                }, 5000)
             }else{
                 const externalCacheResponse = new ExternalCacheResponse({
                     url
