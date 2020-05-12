@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "activationfunctions.cpp"
+#define printVector(vec) for(auto el : vec) std::cout << el << " "; std::cout << std::endl; 
 
 NeuralNetwork::NeuralNetwork(bool withBias) {
     NN = std::vector<std::vector<std::vector<double>>>();
@@ -37,10 +38,11 @@ void NeuralNetwork::predict(std::vector<double>& input, std::vector<double>& out
 	for (int layer = 0; (unsigned)layer < NN.size() - 1; layer++) {
 		current = matrixMultiplication(current, NN[layer]);
 		for (int i = 0; (unsigned)i < current.size(); i++) {
-			if((unsigned) layer == NN.size() - 2) current[i] = Activation::SQNLActivate(current[i]);
+			if((unsigned) layer == NN.size() - 2) current[i] = Activation::logisticActivate(current[i]);
 			else current[i] = Activation::logisticActivate(current[i]);
 		}
 	}
+	printVector(current);
 	output = current;
 }
 

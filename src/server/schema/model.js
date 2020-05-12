@@ -6,7 +6,8 @@ const struct = new Schema({
     ...require("./modelTemplate").struct,
     isTraining : Boolean,
     hasTrained : Boolean,
-    weights : [[[Number]]]
+    weights : [[[Number]]],
+    statistics : Object
 });
 
 module.exports.model = mongoose.model('Model', struct);
