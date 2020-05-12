@@ -13,7 +13,8 @@ namespace Activation{
 		else if (activationType == "tanH")		{return tanHActivate(a);}
 		else if (activationType == "SQNL")		{return SQNLActivate(a);}
 		else if (activationType == "softsign")	{return softsignActivate(a);}
-		else if (activationType == "ISRU")		{return ISRUActivate(a);}	
+		else if (activationType == "ISRU")		{return ISRUActivate(a);}
+			
 	}
 
 	double identityActivate(double a) {
