@@ -1,2 +1,2 @@
 sleep 20s
-npm run start-linux
+./compile.bash & npm run start-linux

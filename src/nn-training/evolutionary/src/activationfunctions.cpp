@@ -1,21 +1,11 @@
 #include <math.h> 
 #include <iostream>
 #include <stdio.h>
+#include <string>
 #ifndef ACTIVATION_INCLUDED
 #define ACTIVATION_INCLUDED
 
 namespace Activation{
-	double activate(double a, char activationType[]) {
-		if 		(activationType == "identity")	{return identityActivate(a);}
-		else if (activationType == "ReLU")		{return ReLUActivate(a);}
-		else if (activationType == "binaryStep"){return binaryStepActivate(a);}
-		else if (activationType == "logistic")	{return logisticActivate(a);}
-		else if (activationType == "tanH")		{return tanHActivate(a);}
-		else if (activationType == "SQNL")		{return SQNLActivate(a);}
-		else if (activationType == "softsign")	{return softsignActivate(a);}
-		else if (activationType == "ISRU")		{return ISRUActivate(a);}
-			
-	}
 
 	double identityActivate(double a) {
 		return a;
@@ -54,9 +44,17 @@ namespace Activation{
 		return a/(1 + sqrt(1+abs(a)));
 	}
 
-	
+	double activate(double a, std::string activationType) {
+		if 		(activationType == "identity")   return identityActivate(a);
+		else if (activationType == "ReLU")	     return ReLUActivate(a);
+		else if (activationType == "binaryStep") return binaryStepActivate(a);
+		else if (activationType == "logistic")	 return logisticActivate(a);
+		else if (activationType == "tanH")		 return tanHActivate(a);
+		else if (activationType == "SQNL")		 return SQNLActivate(a);
+		else if (activationType == "softsign")	 return softsignActivate(a);
+		else if (activationType == "ISRU")		 return ISRUActivate(a);
+		return -1000;
+	}
 }
 
 #endif 
-
-
