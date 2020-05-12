@@ -16,16 +16,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const port = 4000;
-
 app.use("/models", modelRoutes);
 app.use("/modelTemplates", modelTemplateRoutes);
 app.use("/trading-api", tradingRoutes);
 app.use("/ates", ATERoutes);
 
-mongoose.connect('mongodb://localhost:27017/mtd', {useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(`mongodb://${process.env.MONGODBURL}:27017/mtd`,
+{
+    useNewUrlParser: true, useUnifiedTopology: true,
+    //user : String(process.env.DB_USER),
+    //pass : String(process.env.DB_PASSWORD)
+});
 mongoose.set('useFindAndModify', false);
 
-app.listen(port, () => {
-    console.log(`server running at port ${port}...`)
+app.listen(process.env.PORT, () => {
+    console.log(`server running at ${process.env.PORT}...`)
 });

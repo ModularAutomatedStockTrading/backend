@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <cfloat>
+#include <math.h>
 
 //#define DEBUG
 
@@ -61,14 +62,14 @@ double ModelTrainer::evaluateInstance(int id) {
         std::vector<double> output;
         neuralNetworks[id].predict(training_data_input[i], output);
         #ifdef DEBUG
-        print(id);
-        print("   input");
-        printNoEndl("   "); printVector(training_data_input[i]);
-        print("   output");
-        printNoEndl("   "); printVector(output);
+            print(id);
+            print("   input");
+            printNoEndl("   "); printVector(training_data_input[i]);
+            print("   output");
+            printNoEndl("   "); printVector(output);
         #endif
         for(int j = 0; (unsigned)j < output.size(); j++){
-            sum += abs(output[j] - training_data_output[i][j]);
+            sum += std::fabs(output[j] - training_data_output[i][j]);
         }
     }
     return sum / training_data_input.size();
@@ -88,7 +89,7 @@ int ModelTrainer::getBestInstanceFromGeneration() {
         }
     }
     #ifndef DEBUG
-    std::cout << "best performance: " << bestPerformance << std::endl;
+        std::cout << "best performance: " << bestPerformance << std::endl;
     #endif
     return best;
 }
@@ -101,21 +102,21 @@ int ModelTrainer::train(double mutationRange, int numberOfGenerations, int insta
     int best = -1;
     for (int i = 0; i < numberOfGenerations; i++) {
         #ifndef DEBUG
-        std::cout << "generation: " << i + 1 << std::endl;
+            std::cout << "generation: " << i + 1 << std::endl;
         #endif
         best = getBestInstanceFromGeneration();
         generateMutatedGeneration(best);
     }
     #ifdef DEBUG
-    print("training ended");
-    for(int i = 0; (unsigned)i < training_data_input.size(); i++){
-        std::vector<double> output;
-        neuralNetworks[best].predict(training_data_input[i], output);
-        print("   input");
-        printNoEndl("   "); printVector(training_data_input[i]);
-        print("   output");
-        printNoEndl("   "); printVector(output);
-    }
+        print("training ended");
+        for(int i = 0; (unsigned)i < training_data_input.size(); i++){
+            std::vector<double> output;
+            neuralNetworks[best].predict(training_data_input[i], output);
+            print("   input");
+            printNoEndl("   "); printVector(training_data_input[i]);
+            print("   output");
+            printNoEndl("   "); printVector(output);
+        }
     #endif
     return best;
 }

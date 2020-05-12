@@ -125,8 +125,8 @@ module.exports = class ModelService{
 
     train(){
         const inputs = minMaxNormalize(this.inputs);
-        //console.log(inputs);
-        //console.log(this.outputs);
+        console.log(inputs);
+        console.log(this.outputs, "jwdnjwd");
         return new Promise((resolve, reject) => {
             if(this.inputs.length < 10) resolve(null);
             console.log("training")

@@ -14,8 +14,6 @@ const fetchExternal = (url, func) => {
                 )
             }else if(existingFetchData){
                 ExternalCacheResponse.watch().on("change", query => {
-                    //console.log(query, existingFetchData, query.operationType, query.documentKey._id, existingFetchData._id)
-                    //console.log(query.operationType == "update" && query.documentKey._id == existingFetchData._id, query.operationType == "update", query.documentKey._id, existingFetchData._id, query.documentKey._id === existingFetchData._id)
                     if(
                         query.operationType == "update" &&
                         JSON.stringify(query.documentKey._id) == JSON.stringify(existingFetchData._id)
