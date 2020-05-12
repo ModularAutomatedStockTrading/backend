@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "activationfunctions.cpp"
+#define printVector(vec) for(auto el : vec) std::cout << el << " "; std::cout << std::endl; 
 
 NeuralNetwork::NeuralNetwork(bool withBias) {
     NN = std::vector<std::vector<std::vector<double>>>();
@@ -41,6 +42,7 @@ void NeuralNetwork::predict(std::vector<double>& input, std::vector<double>& out
 			else current[i] = Activation::activate(current[i], "logistic");
 		}
 	}
+	printVector(current);
 	output = current;
 }
 

@@ -42,6 +42,12 @@ module.exports = class ModelService{
         this.model = model;
         this.inputs = []
         this.outputs = []
+        this.weights = []
+        this.trainingInputs = []
+        this.trainingOutputs = []
+        this.testInputs = []
+        this.testOutputs = []
+        this.statistics = {}
         console.log("created model service")
     }
 
@@ -123,10 +129,79 @@ module.exports = class ModelService{
         })
     }
 
+    test(){
+        if(this.testInputs.length == 0) return;
+        const neuralNetwork = new NNengine.NNExecutor(
+            this.weights.length,
+            this.weights,
+            true
+        );
+        const differences = [];
+        const corrects = [];
+        const truePositives = [];
+        const trueNegatives = [];
+        const falsePositives = [];
+        const falseNegatives = [];
+        for(const i in this.testOutputs[0]){
+            differences.push(0);
+            corrects.push(0);
+            truePositives.push(0);
+            trueNegatives.push(0);
+            falseNegatives.push(0);
+            falsePositives.push(0);
+        }
+        for(const i in this.testInputs){
+            const outputVector = neuralNetwork.predict(
+                this.testInputs[i].length,
+                this.testOutputs[i].length,
+                this.testInputs[i]
+            );
+            for(const j in outputVector){
+                differences[j] += Math.abs(outputVector[j] - this.testOutputs[i][j])
+                const isCorrect = (outputVector[j] > 0.5 == this.testOutputs[i][j]);
+                console.log(isCorrect, outputVector[j], this.testOutputs[i][j])
+                corrects[j] += isCorrect;
+                truePositives[j] += outputVector[j] > 0.5 && isCorrect;
+                trueNegatives[j] += outputVector[j] <= 0.5 && isCorrect;
+                falsePositives[j] += outputVector[j] > 0.5 && !isCorrect;
+                falseNegatives[j] += outputVector[j] <= 0.5 && !isCorrect;
+            }
+        }
+        console.log(truePositives, trueNegatives, falsePositives, falseNegatives)
+        this.statistics = {
+            differences : differences.map(difference => {
+                return difference / this.testOutputs.length
+            }),
+            corrects : corrects.map(correct => {
+                return correct / this.testOutputs.length
+            }),
+            F1scores : (() => {
+                const res = [];
+                for(let i = 0; i < this.testOutputs[0].length; i++){
+                    const precision = truePositives[i] / (truePositives[i] + trueNegatives[i]);
+                    const recall = truePositives[i] / (falseNegatives[i] + truePositives[i]);
+                    console.log(precision, recall)
+                    res.push(precision * recall / (precision + recall) * 2); // https://en.wikipedia.org/wiki/F1_score
+                }
+                return res;
+            })()
+        }
+    }
+
     train(){
+        
         const inputs = minMaxNormalize(this.inputs);
-        console.log(inputs);
-        console.log(this.outputs, "jwdnjwd");
+
+        this.trainingInputs = getSubarrayOfData(inputs, 0.8, true);
+        this.trainingOutputs = getSubarrayOfData(this.outputs, 0.8, true);
+        this.testInputs = getSubarrayOfData(inputs, 0.8, false);
+        this.testOutputs = getSubarrayOfData(this.outputs, 0.8, false);
+
+        console.log(this.trainingInputs);
+        console.log(this.trainingOutputs);
+        console.log(this.testInputs);
+        console.log(this.testOutputs);
+
         return new Promise((resolve, reject) => {
             if(this.inputs.length < 10) resolve(null);
             console.log("training")
@@ -139,15 +214,28 @@ module.exports = class ModelService{
             this.evolutionaryTrainer = new NNengine.EvolutionaryModelTrainer(
                 this.model.amountOfHiddenLayers + 2,
                 modelArray,
-                inputs.length,
-                inputs[0].length,
-                inputs,
-                this.outputs[0].length,
-                this.outputs,
+                this.trainingInputs.length,
+                this.trainingInputs[0].length,
+                this.trainingInputs,
+                this.trainingOutputs[0].length,
+                this.trainingOutputs,
                 true
             );
-            const result = this.evolutionaryTrainer.train(0.5, 10, 10)
-            resolve(result);
+            this.weights = this.evolutionaryTrainer.train(0.5, 10, 10);
+            this.test();
+            resolve({
+                weights : this.weights,
+                statistics : this.statistics
+            });
         })
+    }
+}
+
+const getSubarrayOfData = (data, amount, isFromStart) => {
+    const length = Math.round(data.length * amount);
+    if(isFromStart){
+        return data.slice(0, length)
+    }else{
+        return data.slice(length, data.length);
     }
 }

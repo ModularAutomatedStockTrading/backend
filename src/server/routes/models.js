@@ -46,7 +46,9 @@ router.post("/:id/train", async (req, res) => {
             Model.findById(req.params.id).then(model => {
                 model.hasTrained = true;
                 model.isTraining = false;
-                model.weights = result;
+                model.weights = result.weights;
+                model.statistics = result.statistics;
+                console.log(result)
                 model.save();
             });
         })
