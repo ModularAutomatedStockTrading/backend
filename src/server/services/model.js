@@ -39,6 +39,8 @@ const minMaxNormalize = require("src/server/utility/normalization").minMax;
 
 module.exports = class ModelService{
     constructor(model){
+        console.start("MODEL SERVICE")
+        console.log("initializing model service...")
         this.model = model;
         this.inputs = []
         this.outputs = []
@@ -48,11 +50,10 @@ module.exports = class ModelService{
         this.testInputs = []
         this.testOutputs = []
         this.statistics = {}
-        console.log("created model service")
     }
 
     fetchTrainingData(){
-        console.log("fetching data")
+        console.log("fetching data...")
         return new Promise((resolve, reject) => {
             const fetchingPromises = []
             const dataPromises = []
@@ -130,6 +131,7 @@ module.exports = class ModelService{
     }
 
     test(){
+        console.log("testing neural network...")
         if(this.testInputs.length == 0) return;
         const neuralNetwork = new NNengine.NNExecutor(
             this.weights.length,
@@ -159,7 +161,6 @@ module.exports = class ModelService{
             for(const j in outputVector){
                 differences[j] += Math.abs(outputVector[j] - this.testOutputs[i][j])
                 const isCorrect = (outputVector[j] > 0.5 == this.testOutputs[i][j]);
-                console.log(isCorrect, outputVector[j], this.testOutputs[i][j])
                 corrects[j] += isCorrect;
                 truePositives[j] += outputVector[j] > 0.5 && isCorrect;
                 trueNegatives[j] += outputVector[j] <= 0.5 && isCorrect;
@@ -167,7 +168,6 @@ module.exports = class ModelService{
                 falseNegatives[j] += outputVector[j] <= 0.5 && !isCorrect;
             }
         }
-        console.log(truePositives, trueNegatives, falsePositives, falseNegatives)
         this.statistics = {
             differences : differences.map(difference => {
                 return difference / this.testOutputs.length
@@ -180,7 +180,6 @@ module.exports = class ModelService{
                 for(let i = 0; i < this.testOutputs[0].length; i++){
                     const precision = truePositives[i] / (truePositives[i] + trueNegatives[i]);
                     const recall = truePositives[i] / (falseNegatives[i] + truePositives[i]);
-                    console.log(precision, recall)
                     res.push(precision * recall / (precision + recall) * 2); // https://en.wikipedia.org/wiki/F1_score
                 }
                 return res;
@@ -205,7 +204,7 @@ module.exports = class ModelService{
         return new Promise((resolve, reject) => {
             if(this.inputs.length < 10) resolve(null);
             console.log("training")
-            console.log("   Amount of datapoints:", inputs.length)
+            console.log("Amount of datapoints:", inputs.length)
             const modelArray = 
                 [this.model.amountOfInputNodes + 1]
                 .concat(this.model.amountOfHiddenLayerNodes.map(el => el + 1))
@@ -227,6 +226,7 @@ module.exports = class ModelService{
                 weights : this.weights,
                 statistics : this.statistics
             });
+            console.stop()
         })
     }
 }

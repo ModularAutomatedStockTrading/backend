@@ -1,6 +1,7 @@
 const ExternalCacheResponse = require("src/server/schema/ExternalCacheResponse").ExternalCacheResponse;
 
 const fetchExternal = (url, func) => {
+    console.start("CACHELOG")
     return new Promise((resolve, reject) => {
         ExternalCacheResponse.findOne({
             url
@@ -12,6 +13,7 @@ const fetchExternal = (url, func) => {
                         existingFetchData.data
                     )
                 )
+                console.stop()
             }else if(existingFetchData){
                 ExternalCacheResponse.watch().on("change", query => {
                     if(
@@ -24,6 +26,7 @@ const fetchExternal = (url, func) => {
                                 query.updateDescription.updatedFields.data
                             )
                         )
+                        console.stop()
                     }
                 })
             }else{
@@ -38,6 +41,7 @@ const fetchExternal = (url, func) => {
                     }).then((response) => {
                         console.log("cachelog: made new fetch")
                         resolve(res)
+                        console.stop()
                     });
                 })
             }

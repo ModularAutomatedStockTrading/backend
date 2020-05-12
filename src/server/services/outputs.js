@@ -52,37 +52,27 @@ module.exports.getOutputData = output => new Promise((resolve, reject) => {
         const indicator = value[2];
         const action = value[3];
         const amount = value[4];
-        //console.log(output, company, indicator, action, amount)
         setTimeout(() => fetchFromAPI({
             function : "TIME_SERIES_INTRADAY",
             symbol : company,
             interval : "1min",
             outputsize : "full"
         }).then(response => {
-            //console.log(response)
             const res = {}
             const indicatorKey = `${companyStockIndicators.indexOf(indicator)+1}. ${indicator}`
             const datapoints = {};
             for(const time in response["Time Series (1min)"]){
                 datapoints[new Date(time).getTime()] = response["Time Series (1min)"][time];
             }
-            //console.log(datapoints)
             for(const time in datapoints){
                 const nextMinute = Number(time) + 60 * 1000;
                 if(!datapoints[nextMinute]) continue;
                 const indicatorValue = Number(datapoints[time][indicatorKey]);
                 const nextIndicatorValue = Number(datapoints[nextMinute][indicatorKey]);
-                //console.log(indicatorValue, nextIndicatorValue)
                 res[Number(time)] = action == "UP" ? 
                     Number(nextIndicatorValue / indicatorValue >= (1 + amount / 10000)) : 
                     Number(nextIndicatorValue / indicatorValue <= (1 - amount / 10000))
                 ;
-                /*console.log({
-                    time : Number(time),
-                    value : action == "UP" ? 
-                        nextIndicatorValue / indicatorValue > (1 + amount / 10000) : 
-                        nextIndicatorValue / indicatorValue < (1 - amount / 10000)
-                }, datapoints[time], datapoints[nextMinute])*/
             }
             resolve({
                 datapoints : res,

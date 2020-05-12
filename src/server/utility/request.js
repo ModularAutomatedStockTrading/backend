@@ -13,7 +13,6 @@ const buildQueryString = obj => {
 }
 
 const fetchJSON = async (url) => {
-    console.log("fetching:", url)
     return await(await fetch(url)).json();
 }
 

@@ -6,6 +6,22 @@ const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 const cors = require('cors')
 
+// for debugging
+let consoleCount = 0;
+console.start = (s) => {
+    consoleCount++;
+    console.info(s);
+}
+console.stop = () => {
+    consoleCount--;
+}
+console.log = (s) => {
+    if(consoleCount == 0) console.error("CONSOLE LOG NOT ALLOWED")
+    else console.info("      ".repeat(consoleCount) + s)
+}
+
+console.start("SETUP")
+
 const modelRoutes = require("./routes/models");
 const modelTemplateRoutes = require("./routes/modelTemplates");
 const tradingRoutes = require("./routes/trading");
@@ -33,4 +49,5 @@ mongoose.set('useFindAndModify', false);
 
 app.listen(process.env.PORT, () => {
     console.log(`server running at ${process.env.PORT}...`)
+    console.stop()
 });

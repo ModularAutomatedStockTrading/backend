@@ -48,7 +48,6 @@ router.post("/:id/train", async (req, res) => {
                 model.isTraining = false;
                 model.weights = result.weights;
                 model.statistics = result.statistics;
-                console.log(result)
                 model.save();
             });
         })

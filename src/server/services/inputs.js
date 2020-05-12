@@ -63,7 +63,6 @@ module.exports.getInputData = input => new Promise((resolve, reject) => {
             const res = []
             const indicatorKey = `${companyStockIndicators.indexOf(indicator)+1}. ${indicator}`
             for(const time in response["Time Series (1min)"]){
-                //console.log(time, response["Time Series (1min)"][time])
                 res[new Date(time).getTime()] = Number(response["Time Series (1min)"][time][indicatorKey])
             }
             resolve({
