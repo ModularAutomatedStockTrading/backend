@@ -37,8 +37,8 @@ void NeuralNetwork::predict(std::vector<double>& input, std::vector<double>& out
 	for (int layer = 0; (unsigned)layer < NN.size() - 1; layer++) {
 		current = matrixMultiplication(current, NN[layer]);
 		for (int i = 0; (unsigned)i < current.size(); i++) {
-			if((unsigned) layer == NN.size() - 2) current[i] = Activation::SQNLActivate(current[i]);
-			else current[i] = Activation::logisticActivate(current[i]);
+			if((unsigned) layer == NN.size() - 2) current[i] = Activation::activate(current[i], "SQNL");
+			else current[i] = Activation::activate(current[i], "logistic");
 		}
 	}
 	output = current;
