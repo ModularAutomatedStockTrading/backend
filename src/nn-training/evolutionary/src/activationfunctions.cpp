@@ -42,7 +42,7 @@ namespace Activation{
 
 	double ISRUActivate(double a) {
 		int b = 1;
-		return (double)a/sqrt(1.0 + b*a*a); //retuns value in range [-1/sqrt(b),1/sqrt(b)]
+		return a/sqrt(1.0 + b*a*a); //retuns value in range [-1/sqrt(b),1/sqrt(b)]
 	}
 
 	double activate(double a, std::string activationType) {
