@@ -1,5 +1,6 @@
 const ExternalCacheResponse = require("src/server/schema/ExternalCacheResponse").ExternalCacheResponse;
 
+// check the database for the data received from fetching thr url. Otherwise fetches a new request response.
 const fetchExternal = (url, func) => {
     console.start("CACHELOG")
     console.log(url)

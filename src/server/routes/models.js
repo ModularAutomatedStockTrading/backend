@@ -4,6 +4,7 @@ const ModelTemplate = require("src/server/schema/modelTemplate").model;
 const router = express.Router();
 const ModelService = require("src/server/services/model")
 
+// handler for adding new model
 router.post("/", async (req, res) => {
     const modelTemplateID = req.body.data.modelTemplateID;
     const modelTemplate = (await ModelTemplate.findById(modelTemplateID)).toObject();
@@ -17,16 +18,19 @@ router.post("/", async (req, res) => {
     res.send({model});
 });
 
+// handler for getting all models
 router.get("/", async (req, res) => {
     const models = await Model.find();
     res.send({models});
 });
 
+// handler for changing existing model by id
 router.patch("/:id", async (req, res) => {
     const model = await Model.findByIdAndUpdate(req.params.id, req.body.data, {new : true});
     res.send({model});
 });
 
+// handler for deleting existing model by id
 router.delete("/:id", async (req, res) => {
     await Model.findByIdAndDelete(req.params.id);
     res.sendStatus(200);

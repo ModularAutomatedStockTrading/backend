@@ -37,7 +37,9 @@ const {getOutputData, getAPIurlOutput} = require("src/server/services/outputs")
 const {fetchFromAPI} = require("src/server/utility/alphavantageAPI")
 const minMaxNormalize = require("src/server/utility/normalization").minMax;
 
+// ModelService class (used in routes)
 module.exports = class ModelService{
+    // create instance
     constructor(model){
         console.start("MODEL SERVICE")
         console.log("initializing model service...")
@@ -52,6 +54,7 @@ module.exports = class ModelService{
         this.statistics = {}
     }
 
+    // fetch the data used for training and testing
     fetchTrainingData(){
         console.log("fetching data...")
         return new Promise((resolve, reject) => {
@@ -130,6 +133,7 @@ module.exports = class ModelService{
         })
     }
 
+    // run test cases on model weights
     test(){
         console.log("testing neural network...")
         if(this.testInputs.length == 0) return;
@@ -191,6 +195,7 @@ module.exports = class ModelService{
         }
     }
 
+    // train the given model
     train(){
         
         const inputs = minMaxNormalize(this.inputs);
@@ -246,6 +251,7 @@ module.exports = class ModelService{
     }
 }
 
+// shuffle an array randomly
 const shuffleTwoArrays = (arr1, arr2) => {
     for(const i in arr1){
         const j = Math.floor(Math.random() * arr1.length);
@@ -261,6 +267,7 @@ const shuffleTwoArrays = (arr1, arr2) => {
     }
 }
 
+// get subarray of data
 const getSubarrayOfData = (data, amount, isFromStart) => {
     const length = Math.round(data.length * amount);
     if(isFromStart){

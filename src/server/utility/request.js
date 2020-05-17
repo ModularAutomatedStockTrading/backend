@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 
+// build query string to append to URL given an object, obj
 const buildQueryString = obj => {
     const res = [];
     let cnt = Object.keys(obj).length;
@@ -12,6 +13,7 @@ const buildQueryString = obj => {
     return res.join("");
 }
 
+// fetch JSON from url
 const fetchJSON = async (url) => {
     return await(await fetch(url)).json();
 }

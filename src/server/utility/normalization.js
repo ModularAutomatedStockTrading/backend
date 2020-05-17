@@ -1,4 +1,5 @@
 
+// min max normalization given a 2D array of inputs
 const minMax = inputs => {
     const dimensions = inputs.length == 0 ? - 1 : inputs[0].length;
     if(dimensions == -1) return [];

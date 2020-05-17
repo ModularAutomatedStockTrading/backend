@@ -3,6 +3,7 @@ const {fetchFromAPI, getURL} = require("src/server/utility/alphavantageAPI")
 const companies = ["MSFT", "SNE", "XIACF", "IBM"]
 const companyStockIndicators = ["open", "high", "low", "close", "volume"]
 
+// generate all input options
 module.exports.getInputs = () => {
     const res = []
     for(const company of companies){
@@ -26,6 +27,7 @@ module.exports.getInputs = () => {
     return res;
 }
 
+// get input URL based on input object
 module.exports.getAPIurlInput = input => {
     const type = input.type.split("/");
     const value = input.value.split("/");
@@ -55,6 +57,7 @@ module.exports.getAPIurlInput = input => {
     return "";   
 }
 
+// fetch and format input data based on input object
 module.exports.getInputData = input => new Promise((resolve, reject) => {
     const type = input.type.split("/");
     const value = input.value.split("/");
@@ -106,6 +109,7 @@ module.exports.getInputData = input => new Promise((resolve, reject) => {
     }
 })
 
+// test function
 /*module.exports.getInputData({
     type : `stock/volume`,
     label : `MSFT stock volume`,

@@ -9,6 +9,7 @@ const default_API_config = {
     apikey : API_KEY
 }
 
+// gets API URL based on config object
 const getURL = config => {
     const queryParams = buildQueryString({
         ...default_API_config,
@@ -18,6 +19,7 @@ const getURL = config => {
     return url;
 }
 
+// fetches JSON data from API
 const fetchFromAPI = input => {
     const url = typeof input == "object" ? getURL(input) : input;
     return Cache.fetchExternal(

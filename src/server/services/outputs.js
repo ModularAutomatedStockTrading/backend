@@ -5,6 +5,7 @@ const companyStockIndicators = ["open", "high", "low", "close", "volume"]
 const indicatorActions = ["UP", "DOWN"];
 const amounts = [0,1,2,3,4,5,10,15,20,30,50,100,250,500,1000];
 
+// based on output object, get the corressponding API URL
 module.exports.getAPIurlOutput = output => {
     const type = output.type.split("/")
     const value = output.value.split("/")
@@ -20,6 +21,7 @@ module.exports.getAPIurlOutput = output => {
     return "";   
 }
 
+// generate all output options
 module.exports.getOutputs = () => {
     const res = []
     for(const company of companies){
@@ -44,6 +46,7 @@ module.exports.getOutputs = () => {
     return res;
 }
 
+// fetch and format all outputdata given an output object
 module.exports.getOutputData = output => new Promise((resolve, reject) => {
     const type = output.type.split("/")
     const value = output.value.split("/")
@@ -82,6 +85,7 @@ module.exports.getOutputData = output => new Promise((resolve, reject) => {
     }
 })
 
+// for testing
 /*module.exports.getOutputData({
     type : `stock/high/DOWN/1`,
     label : `MSFT stock high DOWN-1`,
