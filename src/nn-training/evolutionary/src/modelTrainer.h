@@ -17,8 +17,8 @@ public:
     int train(double mutationRange, int numberOfGenerations, int instancesPerGeneration);
     void get_model(int id, std::vector<std::vector<std::vector<double>>>& NN);
     void printModel(int id);
-    int getBestInstanceFromGenerationSingle(int inputIndex);
-    double evaluateInstanceSingle(int id, int inputIndex);
+    //int getBestInstanceFromGenerationSingle(int inputIndex);
+    //double evaluateInstanceSingle(int id, int inputIndex);
 private:
     std::vector<std::vector<double>> training_data_input;
     std::vector<std::vector<double>> training_data_output;

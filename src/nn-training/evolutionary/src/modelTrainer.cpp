@@ -56,7 +56,7 @@ void ModelTrainer::printModel(int id){
     std::cout << "   end model " << id << std::endl; 
 }
 
-double ModelTrainer::evaluateInstanceSingle(int id, int inputIndex) {
+/*double ModelTrainer::evaluateInstanceSingle(int id, int inputIndex) {
     double sum = 0;
     std::vector<double> output;
     neuralNetworks[id].predict(training_data_input[inputIndex], output);
@@ -71,7 +71,7 @@ double ModelTrainer::evaluateInstanceSingle(int id, int inputIndex) {
         sum += std::fabs(output[j] - training_data_output[inputIndex][j]);
     }
     return sum / training_data_input.size(); 
-}
+}*/
 
 double ModelTrainer::evaluateInstance(int id) {
     double sum = 0;
@@ -95,7 +95,7 @@ double ModelTrainer::evaluateInstance(int id) {
 //[[1,1],[0,1], [1,0]]
 //[[0.5684, 0.866],[0.5684, 0.866],[0.5684, 0.866]]
 
-int ModelTrainer::getBestInstanceFromGenerationSingle(int inputIndex) {
+/*int ModelTrainer::getBestInstanceFromGenerationSingle(int inputIndex) {
     int best = -1;
     double bestPerformance = DBL_MAX;
     for (int i = 0; (unsigned)i < neuralNetworks.size(); i++) {
@@ -109,7 +109,7 @@ int ModelTrainer::getBestInstanceFromGenerationSingle(int inputIndex) {
         std::cout << "best performance: " << bestPerformance << std::endl;
     #endif
     return best;
-}
+}*/
 
 int ModelTrainer::getBestInstanceFromGeneration() {
     int best = -1;
