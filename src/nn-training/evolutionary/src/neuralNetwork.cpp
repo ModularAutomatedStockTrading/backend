@@ -5,15 +5,30 @@
 #define printVector(vec) for(auto el : vec) std::cout << el << " "; std::cout << std::endl; 
 
 NeuralNetwork::NeuralNetwork(bool withBias) {
+	/*
+	Constructor function for the NeuralNetwork class.
+	Input -> bool withBias
+	Output -> NeuralNetwork
+	*/
     NN = std::vector<std::vector<std::vector<double>>>();
 	this->withBias = withBias;
 }
 
 void NeuralNetwork::get_NN(std::vector<std::vector<std::vector<double>>>& NN) {
+	/*
+	Gets the 3D vector NN by changing the input 3D vector to match the 3D vector this->NN.
+	Input -> vector<std::vector<std::vector<double>>>& NN
+	Output -> void
+	*/
     NN = this->NN;
 }
 
 void NeuralNetwork::set_NN(std::vector<std::vector<std::vector<double>>>& NN) {
+	/*
+	Sets the 3D vector this->NN by changing the 3D vector to match the 3D vector NN.
+	Input -> vector<std::vector<std::vector<double>>>& NN
+	Output -> void
+	*/
     this->NN = NN;
 }
 
