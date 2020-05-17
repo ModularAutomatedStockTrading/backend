@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset = "UTF-8"/>
+        <meta name = "viewport" content = "width=device-width, initial-scale=1.0"/>
+        <meta http-equiv = "X-UA-Compatible" content = "ie=edge"/>
+        <title>Fetch JSON from API</title>
+    </head>
+
+    <body>
+        <script>
+        async function fetchStock(API_KEY, StockSymbol) {
+            const API_Call = `stock/${StockSymbol}/${API_KEY}`;
+            const response = await fetch(API_Call);
+            //const json = await response.json();
+        }
+        fetchStock('JA8M8FXHZ6K01WSE','AMZN');
+        </script>
+    </body>
+    
+</html>
