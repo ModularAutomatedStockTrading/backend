@@ -8,7 +8,7 @@ NeuralNetwork::NeuralNetwork(bool withBias) {
 	/*
 	Constructor function for the NeuralNetwork class.
 	Input -> bool withBias
-	Output -> NeuralNetwork object
+	Output -> NeuralNetwork
 	*/
     NN = std::vector<std::vector<std::vector<double>>>();
 	this->withBias = withBias;

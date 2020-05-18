@@ -16,15 +16,6 @@ ModelTrainer::ModelTrainer(
     std::vector<std::vector<double>>& output,
     bool withBias
 ) {
-    /*
-    Constructor for ModelTrainer
-    Input ->
-        std::vector<int>& model,
-        std::vector<std::vector<double>>& input,
-        std::vector<std::vector<double>>& output,
-        bool withBias
-    Output -> ModelTrainer object
-    */
     training_data_input = input;
     training_data_output = output;
     modelTemplate = model;
@@ -43,11 +34,6 @@ void ModelTrainer::generateRandomGeneration() {
 }
 
 void ModelTrainer::generateMutatedGeneration(int id) {
-    /*
-    Generates a mutated generation based on a neural network given by id
-    Input -> int id
-    Output -> void
-    */
     for (int i = 0; (unsigned)i < neuralNetworks.size(); i++) {
         if(i != id){
             neuralNetworks[i] = neuralNetworks[id];
@@ -57,11 +43,6 @@ void ModelTrainer::generateMutatedGeneration(int id) {
 }
 
 void ModelTrainer::printModel(int id){
-    /*
-    Used for debugging, prints a model given by id
-    Input -> int id
-    Output -> void
-    */
     std::vector<std::vector<std::vector<double>>> model;
     neuralNetworks[id].get_NN(model);
     std::cout << "   start model " << id << std::endl; 
@@ -76,9 +57,6 @@ void ModelTrainer::printModel(int id){
 }
 
 /*double ModelTrainer::evaluateInstanceSingle(int id, int inputIndex) {
-    /*
-    Not used
-    */
     double sum = 0;
     std::vector<double> output;
     neuralNetworks[id].predict(training_data_input[inputIndex], output);
@@ -96,11 +74,6 @@ void ModelTrainer::printModel(int id){
 }*/
 
 double ModelTrainer::evaluateInstance(int id) {
-    /*
-    Evaluate a single instance given by id
-    Input -> int id
-    Output -> double evaluation
-    */
     double sum = 0;
     for (int i = 0; (unsigned)i < training_data_input.size(); i++) {
         std::vector<double> output;
@@ -123,9 +96,6 @@ double ModelTrainer::evaluateInstance(int id) {
 //[[0.5684, 0.866],[0.5684, 0.866],[0.5684, 0.866]]
 
 /*int ModelTrainer::getBestInstanceFromGenerationSingle(int inputIndex) {
-    /*
-    Not used
-    */
     int best = -1;
     double bestPerformance = DBL_MAX;
     for (int i = 0; (unsigned)i < neuralNetworks.size(); i++) {
@@ -142,11 +112,6 @@ double ModelTrainer::evaluateInstance(int id) {
 }*/
 
 int ModelTrainer::getBestInstanceFromGeneration() {
-    /*
-    Returns the best instance from a generation
-    Input -> void
-    Output -> int id for the best instance
-    */
     int best = -1;
     double bestPerformance = DBL_MAX;
     for (int i = 0; (unsigned)i < neuralNetworks.size(); i++) {
@@ -163,11 +128,6 @@ int ModelTrainer::getBestInstanceFromGeneration() {
 }
 
 int ModelTrainer::train(double mutationRange, int numberOfGenerations, int instancesPerGeneration) {
-    /*
-    Trains the model over many generations
-    Intput -> double mutationRange, int numberOfGenerations, int instancesPerGeneration
-    Output -> int the best model after the training is finished
-    */
     srand(time(NULL)); // bad
     this->mutationRange = mutationRange;
     neuralNetworks = std::vector<NeuralNetwork>(instancesPerGeneration, NeuralNetwork(withBias));
@@ -200,10 +160,5 @@ int ModelTrainer::train(double mutationRange, int numberOfGenerations, int insta
 }
 
 void ModelTrainer::get_model(int id, std::vector<std::vector<std::vector<double>>>& NN) {
-    /*
-    Sets the input model to the model given by id
-    Input -> int id, std::vector<std::vector<std::vector<double>>>& NN
-    Output -> void
-    */
     neuralNetworks[id].get_NN(NN);
 }
