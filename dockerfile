@@ -1,4 +1,4 @@
-FROM node:14.2.0
+FROM node:13.13.0
 WORKDIR /usr/app
 COPY . .
 RUN apt-get install g++
