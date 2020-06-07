@@ -76,9 +76,7 @@ void ModelTrainer::printModel(int id){
 }
 
 /*double ModelTrainer::evaluateInstanceSingle(int id, int inputIndex) {
-    /*
-    Not used
-    */
+    // Not used
     double sum = 0;
     std::vector<double> output;
     neuralNetworks[id].predict(training_data_input[inputIndex], output);
@@ -123,9 +121,7 @@ double ModelTrainer::evaluateInstance(int id) {
 //[[0.5684, 0.866],[0.5684, 0.866],[0.5684, 0.866]]
 
 /*int ModelTrainer::getBestInstanceFromGenerationSingle(int inputIndex) {
-    /*
-    Not used
-    */
+    // Not used
     int best = -1;
     double bestPerformance = DBL_MAX;
     for (int i = 0; (unsigned)i < neuralNetworks.size(); i++) {
@@ -173,18 +169,18 @@ int ModelTrainer::train(double mutationRange, int numberOfGenerations, int insta
     neuralNetworks = std::vector<NeuralNetwork>(instancesPerGeneration, NeuralNetwork(withBias));
     generateRandomGeneration();
     int best = -1;
-    /*for (int i = 0; i < numberOfGenerations; i++) {
+    for (int i = 0; i < numberOfGenerations; i++) {
         #ifndef DEBUG
             std::cout << "generation: " << i + 1 << std::endl;
         #endif
         best = getBestInstanceFromGeneration();
         generateMutatedGeneration(best);
-    }*/
-    for(int i = 0; i < training_data_input.size(); i++){
+    }
+    /*for(int i = 0; i < training_data_input.size(); i++){
         std::cout << "generation: " << i + 1 << std::endl;
         best = getBestInstanceFromGenerationSingle(i);
         generateMutatedGeneration(best);
-    }
+    }*/
     #ifdef DEBUG
         print("training ended");
         for(int i = 0; (unsigned)i < training_data_input.size(); i++){

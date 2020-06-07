@@ -1,125 +1,49 @@
 diff --git a/src/nn-training/evolutionary/src/modelTrainer.cpp b/src/nn-training/evolutionary/src/modelTrainer.cpp
-index 198a658..d0565fb 100644
+index e2ef30a..a149417 100644
 --- a/src/nn-training/evolutionary/src/modelTrainer.cpp
 +++ b/src/nn-training/evolutionary/src/modelTrainer.cpp
-@@ -56,6 +56,23 @@ void ModelTrainer::printModel(int id){
-     std::cout << "   end model " << id << std::endl; 
+@@ -76,9 +76,7 @@ void ModelTrainer::printModel(int id){
  }
  
-+double ModelTrainer::evaluateInstanceSingle(int id, int inputIndex) {
-+    double sum = 0;
-+    std::vector<double> output;
-+    neuralNetworks[id].predict(training_data_input[inputIndex], output);
-+    #ifdef DEBUG
-+        print(id);
-+        print("   input");
-+        printNoEndl("   "); printVector(training_data_input[i]);
-+        print("   output");
-+        printNoEndl("   "); printVector(output);
-+    #endif
-+    for(int j = 0; (unsigned)j < output.size(); j++){
-+        sum += std::fabs(output[j] - training_data_output[inputIndex][j]);
-+    }
-+    return sum / training_data_input.size(); 
-+}
-+
- double ModelTrainer::evaluateInstance(int id) {
+ /*double ModelTrainer::evaluateInstanceSingle(int id, int inputIndex) {
+-    /*
+-    Not used
+-    */
++    // Not used
      double sum = 0;
-     for (int i = 0; (unsigned)i < training_data_input.size(); i++) {
-@@ -72,12 +89,28 @@ double ModelTrainer::evaluateInstance(int id) {
-             sum += std::fabs(output[j] - training_data_output[i][j]);
-         }
-     }
--    return sum / training_data_input.size();
-+    return sum / training_data_input.size(); 
- }
- 
- //[[1,1],[0,1], [1,0]]
+     std::vector<double> output;
+     neuralNetworks[id].predict(training_data_input[inputIndex], output);
+@@ -123,9 +121,7 @@ double ModelTrainer::evaluateInstance(int id) {
  //[[0.5684, 0.866],[0.5684, 0.866],[0.5684, 0.866]]
  
-+int ModelTrainer::getBestInstanceFromGenerationSingle(int inputIndex) {
-+    int best = -1;
-+    double bestPerformance = DBL_MAX;
-+    for (int i = 0; (unsigned)i < neuralNetworks.size(); i++) {
-+        double performance = evaluateInstanceSingle(i, inputIndex);
-+        if (performance < bestPerformance) {
-+            best = i;
-+            bestPerformance = performance;
-+        }
-+    }
-+    #ifndef DEBUG
-+        std::cout << "best performance: " << bestPerformance << std::endl;
-+    #endif
-+    return best;
-+}
-+
- int ModelTrainer::getBestInstanceFromGeneration() {
+ /*int ModelTrainer::getBestInstanceFromGenerationSingle(int inputIndex) {
+-    /*
+-    Not used
+-    */
++    // Not used
      int best = -1;
      double bestPerformance = DBL_MAX;
-@@ -100,12 +133,17 @@ int ModelTrainer::train(double mutationRange, int numberOfGenerations, int insta
+     for (int i = 0; (unsigned)i < neuralNetworks.size(); i++) {
+@@ -173,18 +169,18 @@ int ModelTrainer::train(double mutationRange, int numberOfGenerations, int insta
      neuralNetworks = std::vector<NeuralNetwork>(instancesPerGeneration, NeuralNetwork(withBias));
      generateRandomGeneration();
      int best = -1;
--    for (int i = 0; i < numberOfGenerations; i++) {
-+    /*for (int i = 0; i < numberOfGenerations; i++) {
+-    /*for (int i = 0; i < numberOfGenerations; i++) {
++    for (int i = 0; i < numberOfGenerations; i++) {
          #ifndef DEBUG
              std::cout << "generation: " << i + 1 << std::endl;
          #endif
          best = getBestInstanceFromGeneration();
          generateMutatedGeneration(best);
+-    }*/
+-    for(int i = 0; i < training_data_input.size(); i++){
++    }
++    /*for(int i = 0; i < training_data_input.size(); i++){
+         std::cout << "generation: " << i + 1 << std::endl;
+         best = getBestInstanceFromGenerationSingle(i);
+         generateMutatedGeneration(best);
+-    }
 +    }*/
-+    for(int i = 0; i < training_data_input.size(); i++){
-+        std::cout << "generation: " << i + 1 << std::endl;
-+        best = getBestInstanceFromGenerationSingle(i);
-+        generateMutatedGeneration(best);
-     }
      #ifdef DEBUG
          print("training ended");
-diff --git a/src/nn-training/evolutionary/src/modelTrainer.h b/src/nn-training/evolutionary/src/modelTrainer.h
-index 0e10c86..4717b35 100644
---- a/src/nn-training/evolutionary/src/modelTrainer.h
-+++ b/src/nn-training/evolutionary/src/modelTrainer.h
-@@ -17,6 +17,8 @@ public:
-     int train(double mutationRange, int numberOfGenerations, int instancesPerGeneration);
-     void get_model(int id, std::vector<std::vector<std::vector<double>>>& NN);
-     void printModel(int id);
-+    int getBestInstanceFromGenerationSingle(int inputIndex);
-+    double evaluateInstanceSingle(int id, int inputIndex);
- private:
-     std::vector<std::vector<double>> training_data_input;
-     std::vector<std::vector<double>> training_data_output;
-diff --git a/src/nn-training/evolutionary/src/neuralNetwork.cpp b/src/nn-training/evolutionary/src/neuralNetwork.cpp
-index b403f05..e10668a 100644
---- a/src/nn-training/evolutionary/src/neuralNetwork.cpp
-+++ b/src/nn-training/evolutionary/src/neuralNetwork.cpp
-@@ -42,15 +42,18 @@ void NeuralNetwork::predict(std::vector<double>& input, std::vector<double>& out
- 			else current[i] = Activation::activate(current[i], "logistic");
- 		}
- 	}
--	printVector(current);
-+	// printVector(current);
- 	output = current;
- }
- 
- void NeuralNetwork::modifyWeights(double mutationRange) {
--    for (int i = 0; (unsigned)i < NN.size(); i++) {
-+    double range = (double)(rand() % (int)(mutationRange * 1000000)) / 1000000; 0 - 0.5;
-+	for (int i = 0; (unsigned)i < NN.size(); i++) {
-         for (int j = 0; (unsigned)j < NN[i].size(); j++) {
-             for (int k = 0; (unsigned)k < NN[i][j].size(); k++) {
--                NN[i][j][k] += (double)(rand() % (int)(mutationRange * 1000000 * 2)) / 1000000 - mutationRange;
-+				double change = (double)(rand() % (int)(range * 1000000 * 2)) / 1000000 - range;
-+				//std::cout << change << std::endl;
-+                NN[i][j][k] += change;
-             }
-         }
-     }
-@@ -63,7 +66,7 @@ void NeuralNetwork::generateRandomInstance(std::vector<int>& modelTemplate) {
-         for (int j = 0; j < modelTemplate[i]; j++) {
-             NN[i][j].resize(modelTemplate[i + 1]);
-             for (int k = 0; k < modelTemplate[i + 1]; k++) {
--                NN[i][j][k] = (double)rand() / RAND_MAX;
-+                NN[i][j][k] = (double)rand() / RAND_MAX - 0.5;
-             }
-         }
-     }
+         for(int i = 0; (unsigned)i < training_data_input.size(); i++){
