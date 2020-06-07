@@ -19,7 +19,8 @@
     "start-linux": "NODE_PATH=. nodemon src/server/app",
     "start-windows": "cmd.exe /C \"set NODE_PATH=.&& nodemon src/server/app\"",
     "compile": "node-gyp rebuild",
-    "runtest": "node test.js"
+    "runtest": "node test.js",
+    "start-linux-prod" : "NODE_PATH=. node src/server/app"
   },
   "devDependencies": {
     "node-gyp": "^6.1.0"
